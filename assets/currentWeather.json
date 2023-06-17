@@ -1,0 +1,49 @@
+{
+  "coord": {
+    "lon": 57.7192,
+    "lat": -20.1085
+  },
+  "weather": [
+    {
+      "id": 500,
+      "main": "Rain",
+      "description": "light rain",
+      "icon": "10n"
+    }
+  ],
+  "base": "stations",
+  "main": {
+    "temp": 30.75,
+    "feels_like": 302.43,
+    "temp_min": 299.4,
+    "temp_max": 300.06,
+    "pressure": 1017,
+    "humidity": 77,
+    "sea_level": 1017,
+    "grnd_level": 1016
+  },
+  "visibility": 10000,
+  "wind": {
+    "speed": 7.05,
+    "deg": 106,
+    "gust": 8.66
+  },
+  "rain": {
+    "1h": 0.19
+  },
+  "clouds": {
+    "all": 29
+  },
+  "dt": 1681926474,
+  "sys": {
+    "type": 2,
+    "id": 2002134,
+    "country": "MU",
+    "sunrise": 1681870853,
+    "sunset": 1681912525
+  },
+  "timezone": 14400,
+  "id": 934085,
+  "name": "Roches Noire",
+  "cod": 200
+}

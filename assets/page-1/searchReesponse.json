@@ -1,0 +1,207 @@
+{
+  "timestamp": 1684332996,
+  "component": "cmsfullsearch",
+  "result": 1,
+  "message": "success",
+  "uri": "/api/v1/cmsfullsearch/cms_full_search",
+  "response": {
+    "indexModels": [
+      {
+        "uid": "sc67w8t3",
+        "latinName": "Malus pumila",
+        "commonNames": [
+          "Paradise apple",
+          "Apple tree",
+          "Domesticated orchard apple",
+          "Eating apple",
+          "Culinary apple"
+        ],
+        "synonyms": [
+          "Pyrus prasomila",
+          "Malus dioica",
+          "Pyrus acerba",
+          "Pyrus fontanesiana",
+          "Malus pumila var. niedzwetzkyana",
+          "Pyrus oriostyla",
+          "Malus cylindracea",
+          "Sorbus malus",
+          "Pyrus paris",
+          "Malus domestica subsp. macrocarpa",
+          "Pyrus cavillea",
+          "Malus domestica subsp. rossica",
+          "Malus domestica subsp. intermedia",
+          "Malus tatarica",
+          "Malus umbellata",
+          "Malus sylvestris var. paradisiaca",
+          "Malus turbinioides",
+          "Pyrus malus",
+          "Malus livida",
+          "Pyrus pollveria",
+          "Pyrus malus var. mitis",
+          "Malus paradisiaca",
+          "Malus upsalensis",
+          "Malus santonum",
+          "Malus domestica subsp. occidentali-europaea",
+          "Pyrus malus subsp. mitis",
+          "Malus communis subsp. mitis",
+          "Pyrus parasomila hort.",
+          "Malus pumila var. domestica",
+          "Malus niedzwetzkyana",
+          "Malus domestica subsp. italo-taurica",
+          "Pyrus malus subsp. paradisiaca",
+          "Pyrus divisa",
+          "Pyrus malus var. paradisiaca",
+          "Pyrus epirotica",
+          "Malus domestica var. parmaenea f.",
+          "Pyrenia malus",
+          "Pyrus cestiana hort. ex",
+          "Malus sylvestris subsp. paradisiaca",
+          "Pyrus apetala",
+          "Malus domestica subsp. medio-asiatica",
+          "Malus sylvestris",
+          "Malus praecox var. paradisiaca",
+          "Malus domestica subsp. cerasifera",
+          "Pyrus pulverulenta",
+          "Malus sylvestris var. praecox",
+          "Pyrus pomum",
+          "Pyrus dioica",
+          "Malus domestica subsp. hybrida",
+          "Malus glabra",
+          "Malus dasyphylla var. domestica",
+          "Malus sativa",
+          "Malus microcarpa",
+          "Pyrus niedzwetzkyana",
+          "Malus pumila var. paradisiaca",
+          "Malus domestica subsp. caucasica",
+          "Malus domestica subsp. pumila",
+          "Pyrus rubelliana hort. ex",
+          "Malus frutescens",
+          "Malus domestica var. calvillea f.",
+          "Malus sylvestris subsp. mitis",
+          "Malus spumosa",
+          "Malus viridis",
+          "Pyrus armeniacifolia",
+          "Pyrus astracanica",
+          "Malus pumila",
+          "Malus domestica",
+          "Malus domestica var. renettea f.",
+          "Malus fontanesiana",
+          "Pyrus apiosa hort. ex",
+          "Pyrus malus subsp. hortensis",
+          "Pyrus paradisiaca",
+          "Pyrus sylvestris",
+          "Pyrus upsaliensis"
+        ],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/201218453315649536.jpeg",
+        "rank": 246
+      },
+      {
+        "uid": "af5u6xvp",
+        "latinName": "Castilleja applegatei",
+        "commonNames": [
+          "Wavyleaf indian paintbrush",
+          "Wavy Leaf Paintbrush",
+          "Applegate's Paintbrush",
+          "Applegate's indian paintbrush",
+          "Pine indian paintbrush"
+        ],
+        "synonyms": [
+          "Castilleja applegatei"
+        ],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/DDD21E7BD94146FBB389F74DE186FFDD.jpeg",
+        "rank": 7706
+      },
+      {
+        "uid": "e498hr0a",
+        "latinName": "Solanum tuberosum 'Pink Fir Apple'",
+        "commonNames": [
+          "Potato 'Pink Fir Apple'",
+          "Irish potato 'Pink Fir Apple'",
+          "Tater 'Pink Fir Apple'",
+          "Tattie 'Pink Fir Apple'",
+          "Spud 'Pink Fir Apple'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/4262F5A19A574164B260F5851258E9E8.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "vskqbp06",
+        "latinName": "Hippeastrum 'Apple Blossom'",
+        "commonNames": [
+          "Amaryllis 'Apple Blossom'",
+          "South american amaryllis 'Apple Blossom'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/922CA02450A74D3D8D3ABE5914EC5B7F.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "09kv8d2d",
+        "latinName": "Escallonia × langleyensis 'Apple Blossom'",
+        "commonNames": [
+          "Redclaws 'Apple Blossom'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/73E5D10E80C5444894F724CD30DB9C99.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "mtgek4z3",
+        "latinName": "Pelargonium 'Apple Blossom Rosebud'",
+        "commonNames": [
+          "Pelargoniums 'Apple Blossom Rosebud'",
+          "Geraniums 'Apple Blossom Rosebud'",
+          "Storkbills 'Apple Blossom Rosebud'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/ABF2571F73CB4CEB9931B219259B6CA9.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "w6a2q1ki",
+        "latinName": "Pelargonium × hortorum 'Appleblossom Rosebud'",
+        "commonNames": [
+          "Pelargoniums 'Appleblossom Rosebud'",
+          "Geraniums 'Appleblossom Rosebud'",
+          "Storkbills 'Appleblossom Rosebud'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/F1072341090E4C7F9DD1D80119E8C48A.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "ab97d3dm",
+        "latinName": "Penstemon hartwegii 'Arabesque Appleblossom'",
+        "commonNames": [
+          "Hartweg's beardtongue 'Arabesque Appleblossom'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/5F9119EA1DB2429D9BC2B4F8A3AB973C.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "zov72twd",
+        "latinName": "Sempervivum 'Appletiti'",
+        "commonNames": [
+          "Houseleeks 'Appletiti'",
+          "Liveforever 'Appletiti'",
+          "Hen and chicks 'Appletiti'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/E9C1DB3460B94BF1A4AE51BEB84F1B16.jpeg",
+        "rank": 999999
+      },
+      {
+        "uid": "8al1u7iv",
+        "latinName": "Penstemon gloxinoides 'Apple Blossom'",
+        "commonNames": [
+          "Beardtongues 'Apple Blossom'"
+        ],
+        "synonyms": [],
+        "mainImageUrl": "https://www.picturethisai.com/image/1080/249326BBDE0E485CB248B83B94FF28C4.jpeg",
+        "rank": 999999
+      }
+    ]
+  }
+}
