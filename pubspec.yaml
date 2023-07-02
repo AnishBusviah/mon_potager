@@ -53,6 +53,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   flutter_local_notifications: ^9.3.2
   flutter_native_timezone: ^1.0.10
+  path_provider: ^2.0.15
 
 
 dev_dependencies:
@@ -106,6 +107,7 @@ flutter:
     - assets/water.jpg
     - assets/repot.jpg
     - assets/light.jpg
+    - assets/response_species_identification.json
 
 
 

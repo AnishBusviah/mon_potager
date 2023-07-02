@@ -112,6 +112,7 @@ class Search extends SearchDelegate {
                 ),
                 title: Text(searchResponse.commonName),
                 onTap: () {
+                  // print(resultsMap["indexModels"][index]);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -157,6 +158,7 @@ class Search extends SearchDelegate {
                       title: Text(searchResponse.commonName),
                       trailing: Icon(CupertinoIcons.right_chevron),
                       onTap: () {
+                        // print("here: " + resultsMap["indexModels"][index]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
