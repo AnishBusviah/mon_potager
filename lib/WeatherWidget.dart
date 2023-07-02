@@ -53,42 +53,53 @@ class _WeatherInfoState extends State<WeatherInfo> {
   var icon;
 
   void GetWeatherData(var lat, var lon) async {
-    // final baseUrl = 'https://api.openweathermap.org';
-    // final endpoint = 'data/2.5/forecast';
-    // final queryParameters = {'lat': lat.toString(), 'lon': lon.toString(), 'units': 'metric', 'appid': 'ab6573ef328b0df8804ffcee0190a562'};
-    // final queryString = queryParameters.keys.map((key) => '$key=${queryParameters[key]}').join('&');
-    //
-    // final openWeatherMapURL = '$baseUrl/$endpoint?$queryString';
-    // print(openWeatherMapURL);
-    //
-    // print(Uri.parse(openWeatherMapURL));
-    //
-    // final openWeatherMapResponse = await http.post(Uri.parse(openWeatherMapURL));
+    final baseUrl = 'https://api.openweathermap.org';
+    final endpoint = 'data/2.5/forecast';
+    final queryParameters = {'lat': lat.toString(), 'lon': lon.toString(), 'units': 'metric', 'appid': 'ab6573ef328b0df8804ffcee0190a562'};
+    final queryString = queryParameters.keys.map((key) => '$key=${queryParameters[key]}').join('&');
+
+    final openWeatherMapURL = '$baseUrl/$endpoint?$queryString';
+    print(openWeatherMapURL);
+
+    print(Uri.parse(openWeatherMapURL));
+
+    final openWeatherMapResponse = await http.post(Uri.parse(openWeatherMapURL));
     //
     //
     //
     // print(openWeatherMapResponse.statusCode);
     //print(openWeatherMapResponse.body);
 
-    final weatherListData =
-        await rootBundle.loadString("assets/currentWeather.json");
+    ///data from local json
+    // final weatherListData =
+    //     await rootBundle.loadString("assets/currentWeather.json");
+    // final decodedWeatherData = await jsonDecode(weatherListData);
+
+    ///data online
+    final weatherListData = openWeatherMapResponse.body;
     final decodedWeatherData = await jsonDecode(weatherListData);
 
-    city = decodedWeatherData["name"];
-    countryCode = decodedWeatherData["sys"]["country"];
-    weather = decodedWeatherData["weather"][0]["description"];
+    setState(() {
+      city = decodedWeatherData["city"]["name"];
+      countryCode = decodedWeatherData["city"]["country"];
+      weather = decodedWeatherData["list"][0]["weather"][0]["description"];
+
+      weather = CapitaliseFirstLetter(weather);
+
+      temperature = decodedWeatherData["list"][0]["main"]["temp"];
+      temperature = temperature.toStringAsFixed(0);
+      humidity = decodedWeatherData["list"][0]["main"]["humidity"];
+      windSpeed = decodedWeatherData["list"][0]["wind"]["speed"];
+      windDirectionDegrees = decodedWeatherData["list"][0]["wind"]["deg"];
+
+      icon = decodedWeatherData["list"][0]["weather"][0]["icon"];
+    });
+
+
 
     //weather = CapitaliseFirstLetter(weather);
 
-    weather = CapitaliseFirstLetter(weather);
 
-    temperature = decodedWeatherData["main"]["temp"];
-    temperature = temperature.toStringAsFixed(0);
-    humidity = decodedWeatherData["main"]["humidity"];
-    windSpeed = decodedWeatherData["wind"]["speed"];
-    windDirectionDegrees = decodedWeatherData["wind"]["deg"];
-
-    icon = decodedWeatherData["weather"][0]["icon"];
 
     //print(icon);
 
@@ -96,57 +107,67 @@ class _WeatherInfoState extends State<WeatherInfo> {
         await rootBundle.loadString("assets/CountryNameAndCode.json");
     final decodedCountryNames = await jsonDecode(countryNames);
 
-    country = decodedCountryNames[countryCode];
+    setState(() {
+      country = decodedCountryNames[countryCode];
 
-    windSpeed = windSpeed * 3.6;
+      windSpeed = windSpeed * 3.6;
+      windSpeed = windSpeed.toStringAsFixed(2);
 
-    if (windDirectionDegrees >= 0 && windDirectionDegrees < 11.25) {
-      windDirection = "North";
-    } else if (windDirectionDegrees >= 11.25 && windDirectionDegrees < 33.75) {
-      windDirection = "North North East";
-    } else if (windDirectionDegrees >= 33.75 && windDirectionDegrees < 56.25) {
-      windDirection = "North East";
-    } else if (windDirectionDegrees >= 56.25 && windDirectionDegrees < 78.75) {
-      windDirection = "East North East";
-    } else if (windDirectionDegrees >= 78.75 && windDirectionDegrees < 101.25) {
-      windDirection = "East";
-    } else if (windDirectionDegrees >= 101.25 &&
-        windDirectionDegrees < 123.75) {
-      windDirection = "East South East";
-    } else if (windDirectionDegrees >= 123.75 &&
-        windDirectionDegrees < 146.25) {
-      windDirection = "South East";
-    } else if (windDirectionDegrees >= 146.25 &&
-        windDirectionDegrees < 168.75) {
-      windDirection = "South South East";
-    } else if (windDirectionDegrees >= 168.75 &&
-        windDirectionDegrees < 191.25) {
-      windDirection = "South";
-    } else if (windDirectionDegrees >= 191.25 &&
-        windDirectionDegrees < 213.75) {
-      windDirection = "South South West";
-    } else if (windDirectionDegrees >= 213.75 &&
-        windDirectionDegrees < 236.25) {
-      windDirection = "South West";
-    } else if (windDirectionDegrees >= 236.25 &&
-        windDirectionDegrees < 258.75) {
-      windDirection = "West South West";
-    } else if (windDirectionDegrees >= 258.75 &&
-        windDirectionDegrees < 281.25) {
-      windDirection = "West";
-    } else if (windDirectionDegrees >= 281.25 &&
-        windDirectionDegrees < 303.75) {
-      windDirection = "West North West";
-    } else if (windDirectionDegrees >= 303.75 &&
-        windDirectionDegrees < 326.25) {
-      windDirection = "North West";
-    } else if (windDirectionDegrees >= 326.25 &&
-        windDirectionDegrees < 348.75) {
-      windDirection = "North North West";
-    }
-    if (windDirectionDegrees >= 348.75) {
-      windDirection = "North";
-    }
+
+      if (windDirectionDegrees >= 0 && windDirectionDegrees < 11.25) {
+        windDirection = "North";
+      } else if (windDirectionDegrees >= 11.25 && windDirectionDegrees < 33.75) {
+        windDirection = "North North East";
+      } else if (windDirectionDegrees >= 33.75 && windDirectionDegrees < 56.25) {
+        windDirection = "North East";
+      } else if (windDirectionDegrees >= 56.25 && windDirectionDegrees < 78.75) {
+        windDirection = "East North East";
+      } else if (windDirectionDegrees >= 78.75 && windDirectionDegrees < 101.25) {
+        windDirection = "East";
+      } else if (windDirectionDegrees >= 101.25 &&
+          windDirectionDegrees < 123.75) {
+        windDirection = "East South East";
+      } else if (windDirectionDegrees >= 123.75 &&
+          windDirectionDegrees < 146.25) {
+        windDirection = "South East";
+      } else if (windDirectionDegrees >= 146.25 &&
+          windDirectionDegrees < 168.75) {
+        windDirection = "South South East";
+      } else if (windDirectionDegrees >= 168.75 &&
+          windDirectionDegrees < 191.25) {
+        windDirection = "South";
+      } else if (windDirectionDegrees >= 191.25 &&
+          windDirectionDegrees < 213.75) {
+        windDirection = "South South West";
+      } else if (windDirectionDegrees >= 213.75 &&
+          windDirectionDegrees < 236.25) {
+        windDirection = "South West";
+      } else if (windDirectionDegrees >= 236.25 &&
+          windDirectionDegrees < 258.75) {
+        windDirection = "West South West";
+      } else if (windDirectionDegrees >= 258.75 &&
+          windDirectionDegrees < 281.25) {
+        windDirection = "West";
+      } else if (windDirectionDegrees >= 281.25 &&
+          windDirectionDegrees < 303.75) {
+        windDirection = "West North West";
+      } else if (windDirectionDegrees >= 303.75 &&
+          windDirectionDegrees < 326.25) {
+        windDirection = "North West";
+      } else if (windDirectionDegrees >= 326.25 &&
+          windDirectionDegrees < 348.75) {
+        windDirection = "North North West";
+      }
+      if (windDirectionDegrees >= 348.75) {
+        windDirection = "North";
+      }
+    });
+
+    setState(() {
+
+    });
+
+
 
     // print(city);
     // print(country);
@@ -180,6 +201,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
     super.initState();
 
     GetPermission();
+
   }
 
   Widget build(BuildContext context) {
