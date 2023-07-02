@@ -1,2 +1,56 @@
-{"id": 79617988, "custom_id": null, "meta_data": {"latitude": null, "longitude": null, "date": "2023-05-09", "datetime": "2023-05-09"}, "uploaded_datetime": 1683632969.306497, "finished_datetime": 1683632969.634323, "images": [{"file_name": "61eb77a53599455b919ee923e0e5c12b.jpg", "url": "https://plant.id/media/images/61eb77a53599455b919ee923e0e5c12b.jpg"}], "modifiers": ["health_only"], "secret": "g1FZxipnUOPyMWM", "fail_cause": null, "countable": true, "feedback": null, "is_plant_probability": 0.9939207908000001, "is_plant": true, "health_assessment": {"is_healthy_probability": 0.9227059186, "is_healthy": true, "diseases": [{"entity_id": 456, "name": "abiotic", "probability": 0.06673576238, "redundant": true, "disease_details": {"local_name": "abiotic", "language": "en"}}, {"entity_id": 941, "name": "water-related issue", "probability": 0.06094041018, "redundant": true, "disease_details": {"local_name": "water-related issue", "language": "en"}}, {"entity_id": 899, "name": "water excess or uneven watering"}
+{
+  "id": 79617988,
+  "custom_id": null,
+  "meta_data": {
+    "latitude": null,
+    "longitude": null,
+    "date": "2023-05-09",
+    "datetime": "2023-05-09"
+  },
+  "uploaded_datetime": 1683632969.306497,
+  "finished_datetime": 1683632969.634323,
+  "images": [
+    {
+      "file_name": "61eb77a53599455b919ee923e0e5c12b.jpg",
+      "url": "https://plant.id/media/images/61eb77a53599455b919ee923e0e5c12b.jpg"
+    }
+  ],
+  "modifiers": [
+    "health_only"
+  ],
+  "secret": "g1FZxipnUOPyMWM",
+  "fail_cause": null,
+  "countable": true,
+  "feedback": null,
+  "is_plant_probability": 0.9939207908000001,
+  "is_plant": true,
+  "health_assessment": {
+    "is_healthy_probability": 0.9227059186,
+    "is_healthy": true,
+    "diseases": [
+      {
+        "entity_id": 456,
+        "name": "abiotic",
+        "probability": 0.06673576238,
+        "redundant": true,
+        "disease_details": {
+          "local_name": "abiotic",
+          "language": "en"
+        }
+      },
+      {
+        "entity_id": 941,
+        "name": "water-related issue",
+        "probability": 0.06094041018,
+        "redundant": true,
+        "disease_details": {
+          "local_name": "water-related issue",
+          "language": "en"
+        }
+      },
+      {
+        "entity_id": 899,
+        "name": "water excess or uneven watering"
+      }
+
 
