@@ -107,6 +107,7 @@ flutter:
     - assets/water.jpg
     - assets/repot.jpg
     - assets/light.jpg
+    - assets/health.json
     - assets/response_species_identification.json
 
 

@@ -103,8 +103,7 @@ class Search extends SearchDelegate {
       return ListView.builder(
           itemCount: resultsMap["indexModels"].length,
           itemBuilder: (context, index) {
-            searchResponse =
-                new searchResult.fromJson(resultsMap["indexModels"][index]);
+            searchResponse = new searchResult.fromJson(resultsMap["indexModels"][index]);
             return ListTile(
                 leading: Image.network(
                   "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/${searchResponse.thumbnail}?x-oss-process=image/format,webp/quality,q_70/resize,l_500&v=1.1",
