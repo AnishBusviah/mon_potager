@@ -3,9 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_potager/Screens/plantPage2.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
-
 
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
@@ -88,11 +88,16 @@ class Search extends SearchDelegate {
       var responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
 
-
-
       resultsMap = jsonResponse["response"] as Map;
     }
   }
+
+
+  Search({String hintText = "Search a plant"})
+      : super(
+      searchFieldLabel: hintText,
+      textInputAction: TextInputAction.search);
+
 
   var searchResponse;
 
@@ -103,7 +108,8 @@ class Search extends SearchDelegate {
       return ListView.builder(
           itemCount: resultsMap["indexModels"].length,
           itemBuilder: (context, index) {
-            searchResponse = new searchResult.fromJson(resultsMap["indexModels"][index]);
+            searchResponse =
+                new searchResult.fromJson(resultsMap["indexModels"][index]);
             return ListTile(
                 leading: Image.network(
                   "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/${searchResponse.thumbnail}?x-oss-process=image/format,webp/quality,q_70/resize,l_500&v=1.1",
@@ -116,7 +122,11 @@ class Search extends SearchDelegate {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => plantPage(resultsMap["indexModels"][index],),),);
+                      builder: (context) => plantPage2(
+                        resultsMap["indexModels"][index],
+                      ),
+                    ),
+                  );
                 });
           });
     } else if (query == "") {
@@ -162,7 +172,11 @@ class Search extends SearchDelegate {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => plantPage(resultsMap["indexModels"][index],),),);
+                            builder: (context) => plantPage2(
+                              resultsMap["indexModels"][index],
+                            ),
+                          ),
+                        );
                       });
                 }),
       );

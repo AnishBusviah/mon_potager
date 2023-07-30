@@ -5,6 +5,8 @@ import 'package:mon_potager/search.dart';
 import 'package:mon_potager/ui/reminder_screen.dart';
 import 'dart:ui';
 
+import 'Screens/ForYou.dart';
+import 'Screens/GardenScreen.dart';
 import 'Screens/Recommendations.dart';
 import 'Screens/logInScreen.dart';
 import 'WeatherWidget.dart';
@@ -14,6 +16,7 @@ import 'package:mon_potager/utils.dart';
 import './utils.dart';
 import 'Navigation.dart';
 import 'bottomNavBar.dart';
+import 'models/DrawerWidget.dart';
 
 class Scene extends StatefulWidget {
   @override
@@ -26,11 +29,9 @@ class _SceneState extends State<Scene> {
   Color _selected = Color.fromRGBO(64, 97, 80, 1);
   List<Color> _icon = [Colors.black, Colors.black, Colors.black, Colors.black];
 
-
-
   static List<Widget> _screenOptions = <Widget>[
     Home(),
-    // MyGarden(),
+    MyGarden(),
     ReminderScreen(),
     logInScreen(),
   ];
@@ -57,8 +58,25 @@ class _SceneState extends State<Scene> {
     Color bottomNavColor = Color.fromRGBO(255, 255, 255, 1);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
+      appBar: _currentScreen == 0
+          ? AppBar(
+              iconTheme: IconThemeData(
+                  color: Colors.black, size: 32, opticalSize: 100),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              // leading: Icon(
+              //   opticalSize: 15,
+              //   weight: 100,
+              //   Icons.menu,
+              //   size: 32,
+              //   color: Colors.black,
+              // ),
+            )
+          : null,
 
+      drawer: DrawerWidget(),
 
       // appBar: PreferredSize(
       //   preferredSize: Size.fromHeight(260),
@@ -125,15 +143,15 @@ class _SceneState extends State<Scene> {
       //   ),
       // ),
       body: _screenOptions[_currentScreen],
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          CupertinoIcons.plus,
-          color: Colors.black,
-          size: 40,
-        ),
-        backgroundColor: fabColor,
-        onPressed: () {},
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(
+      //     CupertinoIcons.plus,
+      //     color: Colors.black,
+      //     size: 40,
+      //   ),
+      //   backgroundColor: fabColor,
+      //   onPressed: () {},
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         color: bottomNavColor,
@@ -142,83 +160,273 @@ class _SceneState extends State<Scene> {
         height: 60,
         child: Container(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: 60,
-                    onPressed: () {
-                      setState(() {
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MaterialButton(
+                  // color: Colors.blue,
+                  minWidth: 4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home,
+                        color: _icon[0],
+                      ),
+                      Text("Home")
+                    ],
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
                         _changeScreen(0);
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.home, color: _icon[0]),
-                        Text("Home", style: TextStyle(color: _icon[0])),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        _changeScreen(1);
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ImageIcon(
-                          AssetImage('assets/icons/icons8-garden-50.png'),
-                        color: _icon[1],),
-                        Text("My Garden", style: TextStyle(color: _icon[1],)),
-                      ],
-                    ),
-                  ),
-                ],
+                      },
+                    );
+                  }),
+              MaterialButton(
+                minWidth: 10,
+                // color: Colors.green,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(CupertinoIcons.search), Text("Search")],
+                ),
+                onPressed: () {
+                  showSearch(context: context, delegate: Search());
+                },
               ),
-              Row(
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        _changeScreen(1);
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ImageIcon(
-                          AssetImage('assets/icons/icons8-reminders-50.png'),
-                        color: _icon[1]),
-                        Text("Reminders", style: TextStyle(color: _icon[1],)),
-                      ],
+              MaterialButton(
+                // color: Colors.red,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImageIcon(
+                      AssetImage('assets/icons/icons8-garden-50.png'),
+                      color: _icon[1],
                     ),
-                  ),
-                  MaterialButton(
-                    minWidth: 70,
-                    onPressed: () {
-                      setState(() {
-                        _changeScreen(2);
-                      });
+                    Text("My Garden")
+                  ],
+                ),
+                onPressed: () {
+                  setState(
+                    () {
+                      _changeScreen(1);
                     },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.person, color: _icon[2],),
-                        Text("Profile", style: TextStyle(color: _icon[2],),),
-                      ],
+                  );
+                },
+              ),
+              MaterialButton(
+                minWidth: 10,
+                // color: Colors.yellowAccent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImageIcon(
+                        AssetImage('assets/icons/icons8-reminders-50.png'),
+                        color: _icon[2]),
+                    Text("Tasks")
+                  ],
+                ),
+                onPressed: () {
+                  setState(
+                    () {
+                      _changeScreen(2);
+                    },
+                  );
+                },
+              ),
+              MaterialButton(
+                // color: Colors.blue,
+                minWidth: 10,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: _icon[3],
                     ),
-                  ),
-                ],
-              )
+                    Text("Profile")
+                  ],
+                ),
+                onPressed: () {
+                  setState(
+                    () {
+                      _changeScreen(3);
+                    },
+                  );
+                },
+              ),
             ],
           ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: <Widget>[
+          //     MaterialButton(
+          //       minWidth: 10,
+          //       onPressed: () {},
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Icon(
+          //             Icons.home,
+          //             color: _icon[0],
+          //           ),
+          //           Text(
+          //             "Home",
+          //             style: TextStyle(color: _icon[0]),
+          //           )
+          //         ],
+          //       ),
+          //     ),
+          //     MaterialButton(
+          //       minWidth: 20,
+          //       onPressed: () {},
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           ImageIcon(
+          //             AssetImage('assets/icons/icons8-garden-50.png'),
+          //             color: _icon[1],
+          //           ),
+          //           Text("My Garden",
+          //               style: TextStyle(
+          //                 color: _icon[1],
+          //               )),
+          //         ],
+          //       ),
+          //     ),
+          //     MaterialButton(
+          //       minWidth: 20,
+          //       onPressed: () {},
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Icon(
+          //             Icons.search,
+          //             color: _icon[1],
+          //           ),
+          //           Text(
+          //             "Search",
+          //             style: TextStyle(color: _icon[1]),
+          //           )
+          //         ],
+          //       ),
+          //     ),
+          //     MaterialButton(
+          //       minWidth: 20,
+          //       onPressed: () {},
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           ImageIcon(
+          //               AssetImage('assets/icons/icons8-reminders-50.png'),
+          //               color: _icon[1]),
+          //           Text("Reminders",
+          //               style: TextStyle(
+          //                 color: _icon[1],
+          //               )),
+          //         ],
+          //       ),
+          //     ),
+          //     MaterialButton(
+          //       minWidth: 25,
+          //       onPressed: () {},
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Icon(
+          //             Icons.person,
+          //             color: _icon[2],
+          //           ),
+          //           Text(
+          //             "Profile",
+          //             style: TextStyle(
+          //               color: _icon[2],
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //     // Row(
+          //     //   mainAxisAlignment: MainAxisAlignment.center,
+          //     //   children: <Widget>[
+          //     //     MaterialButton(
+          //     //       minWidth: 60,
+          //     //       onPressed: () {
+          //     //         setState(() {
+          //     //           _changeScreen(0);
+          //     //         });
+          //     //       },
+          //     //       child: Column(
+          //     //         mainAxisAlignment: MainAxisAlignment.center,
+          //     //         children: <Widget>[
+          //     //           Icon(Icons.home, color: _icon[0]),
+          //     //           Text("Home", style: TextStyle(color: _icon[0])),
+          //     //         ],
+          //     //       ),
+          //     //     ),
+          //     //     MaterialButton(
+          //     //       minWidth: 40,
+          //     //       onPressed: () {
+          //     //         setState(() {
+          //     //           _changeScreen(1);
+          //     //         });
+          //     //       },
+          //     //       child: Column(
+          //     //         mainAxisAlignment: MainAxisAlignment.center,
+          //     //         children: <Widget>[
+          //     //           ImageIcon(
+          //     //             AssetImage('assets/icons/icons8-garden-50.png'),
+          //     //           color: _icon[1],),
+          //     //           Text("My Garden", style: TextStyle(color: _icon[1],)),
+          //     //         ],
+          //     //       ),
+          //     //     ),
+          //     //   ],
+          //     // ),
+          //     // Column(
+          //     //   mainAxisAlignment: MainAxisAlignment.center,
+          //     //   children: <Widget>[
+          //     //     Icon(Icons.search, color: _icon[1],),
+          //     //     Text("Search", style: TextStyle(color: _icon[1]),)
+          //     //   ],
+          //     // ),
+          //     // Row(
+          //     //   children: <Widget>[
+          //     //     MaterialButton(
+          //     //       minWidth: 40,
+          //     //       onPressed: () {
+          //     //         setState(() {
+          //     //           _changeScreen(2);
+          //     //         });
+          //     //       },
+          //     //       child: Column(
+          //     //         mainAxisAlignment: MainAxisAlignment.center,
+          //     //         children: <Widget>[
+          //     //           ImageIcon(
+          //     //             AssetImage('assets/icons/icons8-reminders-50.png'),
+          //     //           color: _icon[1]),
+          //     //           Text("Reminders", style: TextStyle(color: _icon[1],)),
+          //     //         ],
+          //     //       ),
+          //     //     ),
+          //     //     MaterialButton(
+          //     //       minWidth: 70,
+          //     //       onPressed: () {
+          //     //         setState(() {
+          //     //           _changeScreen(3);
+          //     //         });
+          //     //       },
+          //     //       child: Column(
+          //     //         mainAxisAlignment: MainAxisAlignment.center,
+          //     //         children: <Widget>[
+          //     //           Icon(Icons.person, color: _icon[2],),
+          //     //           Text("Profile", style: TextStyle(color: _icon[2],),),
+          //     //         ],
+          //     //       ),
+          //     //     ),
+          //     //   ],
+          //     // )
+          //   ],
+          // ),
         ),
       ),
     );
@@ -1166,222 +1374,240 @@ class _HomeState extends State<Home> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 10,
-                      blurRadius: 10,
-                      offset: Offset(0, 10), // changes position of shadow
-                    ),
+                    // BoxShadow(
+                    //   color: Colors.grey.withOpacity(0.5),
+                    //   spreadRadius: 10,
+                    //   blurRadius: 10,
+                    //   offset: Offset(0, 10), // changes position of shadow
+                    // ),
                   ],
-                  borderRadius: BorderRadius.circular(50),
+                  // borderRadius: BorderRadius.circular(50),
                   image: DecorationImage(
-                    opacity: 0.6,
+                    opacity: .7,
                     image: AssetImage('assets/appBar_Image.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
               ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 230),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 4 / 20,
+                      decoration: BoxDecoration(
+                          color: Color.fromRGBO(250, 250, 250, 1),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: iconColor,
+                                  ),
+                                  //color: Colors.green,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CameraRoute(
+                                                    "Diagnose Plant")),
+                                      );
+                                    },
+                                    icon: ImageIcon(
+                                      AssetImage(
+                                          "assets/icons/diagnose_plant_2.png"),
+                                      size: 40,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    "Diagnose",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: iconColor,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CameraRoute(
+                                                    "Identify Plant")),
+                                      );
+                                    },
+                                    icon: ImageIcon(
+                                      AssetImage(
+                                          "assets/icons/identify_icon_2.png"),
+                                      size: 40,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    "Identify",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: iconColor,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ForYou()));
+                                    },
+                                    icon: Icon(
+                                      Icons.thumb_up_alt_outlined,
+                                      size: 40,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    "For You",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            // Container(
+                            //   height: 70,
+                            //   width: 70,
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(15),
+                            //     color: Colors.green,
+                            //   ),
+                            //   child: IconButton(
+                            //     onPressed: () {
+                            //       Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //               builder: (context) => RecScreen2()));
+                            //     },
+                            //     icon: Icon(
+                            //       Icons.thumb_up_alt_outlined,
+                            //       size: 40,
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Stack(
+                  //   children: [
+                  //     // Center(
+                  //     //   child: SizedBox(
+                  //     //     width: 8 / 9 * MediaQuery.of(context).size.width,
+                  //     //     child: GestureDetector(
+                  //     //       onTap: () =>
+                  //     //           showSearch(context: context, delegate: Search()),
+                  //     //       child: Container(
+                  //     //         child: Row(
+                  //     //           children: [
+                  //     //             Padding(
+                  //     //               padding: const EdgeInsets.all(8.0),
+                  //     //               child: Icon(
+                  //     //                 CupertinoIcons.search,
+                  //     //                 size: 32,
+                  //     //               ),
+                  //     //             ),
+                  //     //             Text("Search a plant"),
+                  //     //           ],
+                  //     //         ),
+                  //     //         decoration: BoxDecoration(
+                  //     //           borderRadius: BorderRadius.circular(25),
+                  //     //           border: Border.all(
+                  //     //             color: Color.fromRGBO(0, 0, 0, 1),
+                  //     //           ),
+                  //     //         ),
+                  //     //       ),
+                  //     //       // child: TextField(
+                  //     //       //   enabled: false,
+                  //     //       //   //controller: textController,
+                  //     //       //   decoration: InputDecoration(
+                  //     //       //     enabledBorder: OutlineInputBorder(
+                  //     //       //       borderSide: BorderSide(color: Colors.black)
+                  //     //       //     ),
+                  //     //       //     border: OutlineInputBorder(
+                  //     //       //       borderRadius: BorderRadius.circular(30),
+                  //     //       //       // borderSide: BorderSide(color: Colors.green)
+                  //     //       //     ),
+                  //     //       //     hintText: "Search a pl
+                  //     //       //       onPressed: () => showSearch(
+                  //     //       //     context: context, ant",
+                  //     //       //     prefixIcon: IconButton(delegate: Search()),
+                  //     //       //         icon: Icon(Icons.search)),
+                  //     //       //     // suffixIcon: IconButton(
+                  //     //       //     //   onPressed: () {
+                  //     //       //     //     textController.clear();
+                  //     //       //     //   },
+                  //     //       //     //   icon: Icon(
+                  //     //       //     //     Icons.close,
+                  //     //       //     //   ),
+                  //     //       //     // ),
+                  //     //       //   ),
+                  //     //       // ),
+                  //     //     ),
+                  //     //   ),
+                  //     // ),
+                  //
+                  //   ],
+                  // ),
+                ],
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 190),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: iconColor,
-                          ),
-                          //color: Colors.green,
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CameraRoute("Diagnose Plant")),
-                              );
-                            },
-                            icon: ImageIcon(
-                              AssetImage(
-                                  "assets/icons/icons8-stetoscope-48.png"),
-                              size: 40,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "Diagnose Plant",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: iconColor,
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CameraRoute("Identify Plant")),
-                              );
-                            },
-                            icon: ImageIcon(
-                              AssetImage(
-                                  "assets/icons/icons8-identify-plant.png"),
-                              size: 40,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "Identify Plant",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: iconColor,
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RecScreen()));
-                            },
-                            icon: Icon(
-                              Icons.thumb_up_alt_outlined,
-                              size: 40,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "Recommendations",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    // Container(
-                    //   height: 70,
-                    //   width: 70,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(15),
-                    //     color: Colors.green,
-                    //   ),
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => RecScreen2()));
-                    //     },
-                    //     icon: Icon(
-                    //       Icons.thumb_up_alt_outlined,
-                    //       size: 40,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
+                padding: const EdgeInsets.only(top: 310),
+                child: WeatherInfo(),
               ),
             ],
           ),
 
           //Search Bar
-          Padding(
-            padding: const EdgeInsets.only(top: 35),
-            child: Stack(
-              children: [
-                Center(
-                  child: SizedBox(
-                    width: 8 / 9 * MediaQuery.of(context).size.width,
-                    child: GestureDetector(
-                      onTap: () =>
-                          showSearch(context: context, delegate: Search()),
-                      child: Container(
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                CupertinoIcons.search,
-                                size: 32,
-                              ),
-                            ),
-                            Text("Search a plant"),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: Color.fromRGBO(0, 0, 0, 1),
-                          ),
-                        ),
-                      ),
-                      // child: TextField(
-                      //   enabled: false,
-                      //   //controller: textController,
-                      //   decoration: InputDecoration(
-                      //     enabledBorder: OutlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.black)
-                      //     ),
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(30),
-                      //       // borderSide: BorderSide(color: Colors.green)
-                      //     ),
-                      //     hintText: "Search a pl
-                      //       onPressed: () => showSearch(
-                      //     context: context, ant",
-                      //     prefixIcon: IconButton(delegate: Search()),
-                      //         icon: Icon(Icons.search)),
-                      //     // suffixIcon: IconButton(
-                      //     //   onPressed: () {
-                      //     //     textController.clear();
-                      //     //   },
-                      //     //   icon: Icon(
-                      //     //     Icons.close,
-                      //     //   ),
-                      //     // ),
-                      //   ),
-                      // ),
-                    ),
-                  ),
-                ),
-                WeatherInfo(),
-              ],
-            ),
-          ),
         ],
       ),
     );

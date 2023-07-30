@@ -321,7 +321,7 @@ class _WeatherInfoState extends State<WeatherInfo> {
     //Widget style 2
     return icon ==null? Padding(
       padding: const EdgeInsets.only(top: 200),
-      child: Center(child: CircularProgressIndicator()),
+      child: Center(child: CircularProgressIndicator(color: Color.fromRGBO(0, 102, 51, 12),)),
     ) :  Stack(
       children: [
         //Card background
@@ -366,11 +366,11 @@ class _WeatherInfoState extends State<WeatherInfo> {
                         Padding(
                           padding: const EdgeInsets.only(top: 30),
                           child: icon == null
-                              ? CircularProgressIndicator()
+                              ? CircularProgressIndicator(backgroundColor: Colors.transparent,)
                               : country == null
-                                  ? CircularProgressIndicator()
+                                  ? CircularProgressIndicator(backgroundColor: Colors.transparent,)
                                   : city == null
-                                      ? CircularProgressIndicator()
+                                      ? CircularProgressIndicator(backgroundColor: Colors.transparent,)
                                       : Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -393,10 +393,10 @@ class _WeatherInfoState extends State<WeatherInfo> {
 
                     //Icon
                     Padding(
-                      padding: const EdgeInsets.only(top: 50),
+                      padding: const EdgeInsets.only(top: 50, right: 25),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [icon == null? CircularProgressIndicator() :
+                        children: [icon == null? CircularProgressIndicator(backgroundColor: Color.fromRGBO(0, 102, 51, 1),) :
                           Image.network(
                             'https://openweathermap.org/img/wn/' +
                                 icon +

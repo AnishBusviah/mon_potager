@@ -331,25 +331,25 @@ class _ReminderScreenState extends State<ReminderScreen> {
         ),
       ),
       actions: <Widget>[
-        IconButton(
-            icon: const Icon(Icons.close, color: Colors.black),
-            onPressed: () {})
+        // IconButton(
+        //     icon: const Icon(Icons.close, color: Colors.black),
+        //     onPressed: () {})
       ],
       backgroundColor: Color.fromRGBO(129, 164, 131, 1),
       toolbarHeight: 100,
-      leading: GestureDetector(
-        onTap: () {
-          notifyHelper.displayNotification(
-            title: "Notification",
-            body: "Need to complete task!",
-          );
-//notifyHelper.scheduledNotification();
-        },
-        child: const Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
-        ),
-      ),
+//       leading: GestureDetector(
+//         onTap: () {
+//           notifyHelper.displayNotification(
+//             title: "Notification",
+//             body: "Need to complete task!",
+//           );
+// //notifyHelper.scheduledNotification();
+//         },
+//         child: const Icon(
+//           Icons.arrow_back_ios,
+//           color: Colors.black,
+//         ),
+//       ),
     );
   }
 }

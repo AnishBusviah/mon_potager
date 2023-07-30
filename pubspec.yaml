@@ -54,14 +54,26 @@ dependencies:
   flutter_local_notifications: ^9.3.2
   flutter_native_timezone: ^1.0.10
   path_provider: ^2.0.15
+  video_player: ^2.7.0
+  unicons: ^2.1.1
+  fluttertoast: ^8.2.2
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
+  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.0.1+1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/splash2.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icons/app_icon.png"
+
 
 #run commands to create splash screen:
 #  1) flutter clean
@@ -71,7 +83,8 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#F1ECEE"
-  image: assets/splash.jpg
+  image: assets/splash2.png
+  #run "pub run flutter_native_splash:create" when changing splash screen
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -109,6 +122,10 @@ flutter:
     - assets/light.jpg
     - assets/health.json
     - assets/response_species_identification.json
+    - assets/icons/diagnose_plant_2.png
+    - assets/videos/
+    - lib/posts/
+    - assets/plants/
 
 
 
