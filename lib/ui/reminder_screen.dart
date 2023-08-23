@@ -27,26 +27,21 @@ class ReminderScreen extends StatefulWidget {
 class _ReminderScreenState extends State<ReminderScreen> {
   //Colours
   Color darkGreen = Color.fromRGBO(64, 97, 80, 1);
-  
-  
-  NotifyHelper notifyHelper = NotifyHelper();
+
   DateTime _selectedDate = DateTime.now();
   final _taskController = Get.put(TaskController());
   @override
   void initState() {
     super.initState();
-    notifyHelper.initializeNotification();
-    notifyHelper = NotifyHelper();
-    notifyHelper.requestIOSPermissions();
-  }
-
-  Future<void> initializeNotifications() async {
-    await notifyHelper.initializeNotification();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: ()async {
+        await Get.to(() => const AddTaskPage());
+        _taskController.getTask();
+      }, child: Icon(Icons.add)),
       appBar: _appbar(),
       body: Column(
         children: [
@@ -64,7 +59,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   _showTasks() {
     return Expanded(
       child: Obx(
-        () {
+            () {
           final taskList = _taskController.taskList;
           if (taskList.isEmpty) {
             return const Center(
@@ -85,13 +80,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   task.repeat == 'Weekly' ||
                   task.repeat == 'Monthly') {
                 DateTime date =
-                    DateFormat.jm().parse(task.startTime.toString());
+                DateFormat.jm().parse(task.startTime.toString());
 
-                var myTime = DateFormat("HH:mm").format(date);
-                notifyHelper.scheduledNotification(
-                    int.parse(myTime.toString().split(":")[0]),
-                    int.parse(myTime.toString().split(":")[1]),
-                    task);
                 return AnimationConfiguration.staggeredList(
                   position: index,
                   child: SlideAnimation(
@@ -104,6 +94,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               },
                               child: TaskTile(
                                 task: task,
+                                selectedTaskType: null,
                               )),
                         ],
                       ),
@@ -118,13 +109,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     child: FadeInAnimation(
                       child: Row(
                         children: [
-                          GestureDetector(
-                              onTap: () {
-                                _showBottomSheet(context, task);
-                              },
-                              child: TaskTile(
-                                task: task,
-                              )),
+                          Expanded(
+                            child: GestureDetector(
+                                onTap: () {
+                                  _showBottomSheet(context, task);
+                                },
+                                child: Container(
+                                    width:
+                                    100, // Specify your desired width here
+                                    child: TaskTile(
+                                      task: task,
+                                      selectedTaskType: null,
+                                    ))),
+                          ),
                         ],
                       ),
                     ),
@@ -172,14 +169,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
             task.isCompleted == 1
                 ? Container()
                 : _bottomSheetbutton(
-                    label: "Task Completed",
-                    onTap: () {
-                      _taskController.markTaskCompleted(task.id!);
-                      Get.back();
-                    },
-                    color: Color.fromRGBO(93, 215, 173, 0.493),
-                    context: context,
-                  ),
+              label: "Task Completed",
+              onTap: () {
+                _taskController.markTaskCompleted(task.id!);
+                Get.back();
+              },
+              color: Color.fromRGBO(93, 215, 173, 0.493),
+              context: context,
+            ),
             _bottomSheetbutton(
               label: "Delete Task",
               onTap: () {
@@ -232,7 +229,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     : color),
             borderRadius: BorderRadius.circular(20),
             color:
-                isClose == true ? Color.fromRGBO(250, 251, 251, 0.493) : color,
+            isClose == true ? Color.fromRGBO(250, 251, 251, 0.493) : color,
           ),
           child: Center(
             child: Text(label,
@@ -297,12 +294,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
               ],
             ),
           ),
-          Button(
-              label: "+ ",
-              onTap: () async {
-                await Get.to(() => const AddTaskPage());
-                _taskController.getTask();
-              }),
+          // Button(
+          //     label: "+ ",
+          //     onTap: () async {
+          //       await Get.to(() => const AddTaskPage());
+          //       _taskController.getTask();
+          //     }),
         ],
       ),
     );
@@ -337,19 +334,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
       ],
       backgroundColor: Color.fromRGBO(129, 164, 131, 1),
       toolbarHeight: 100,
-//       leading: GestureDetector(
-//         onTap: () {
-//           notifyHelper.displayNotification(
-//             title: "Notification",
-//             body: "Need to complete task!",
-//           );
-// //notifyHelper.scheduledNotification();
-//         },
-//         child: const Icon(
-//           Icons.arrow_back_ios,
-//           color: Colors.black,
-//         ),
-//       ),
     );
   }
 }

@@ -1,0 +1,96 @@
+{
+  "Mint": {
+    "water": "Twice per week",
+    "sunlight": "Full sun",
+    "toxic": "Toxic to Pets",
+    "video": "https://youtu.be/MBfzQTxPfdU",
+    "plantingTime": "Mid spring, Late spring",
+    "uses": ["Culinary Flavor",
+      "Digestive Aid",
+      "Aromatic Ambiance",
+      "Natural Pest Control",
+      "DIY Beauty Care"],
+    "image": "https://ghk.h-cdn.co/assets/17/50/1600x1200/sd-aspect-1513289879-mint-plant.jpg"
+  },
+  "Tomato": {
+    "water": "Twice per week",
+    "sunlight": "Full sun",
+    "toxic": "Toxic to Pets",
+    "video": "https://youtu.be/aUTCtJyO97w",
+    "plantingTime": "Late spring, Early summer, Mid summer",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317742140130164736.jpeg?x-oss-process=image/format,webp/resize,s_622&v=2"
+  },
+  "Avocado": {
+    "water": "Every 1-2 weeks",
+    "sunlight": "Full sun",
+    "toxic": null,
+    "video": "https://youtu.be/Dp0MFjgaShE",
+    "plantingTime": "Spring, Early fall",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317749875366264832.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Red frangipani": {
+    "water": "Every 1-2 weeks",
+    "sunlight": "Full sun",
+    "toxic": "Toxic to Humans",
+    "video": "https://youtu.be/D9Vta8CbyA0",
+    "plantingTime": "Mid spring, Late spring, Early summer, Fall, Early winter",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/154018648262967327.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Pepper": {
+    "water": "Twice per week",
+    "sunlight": "Full sun",
+    "toxic": null,
+    "video": "https://youtu.be/Dmz8vmttuDw",
+    "plantingTime": "Spring, Early summer, Mid summer",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317731389827022848.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Chinese hibiscus": {
+    "water": "Every 1-2 weeks",
+    "sunlight": "Full sun",
+    "toxic": null,
+    "video": "https://youtu.be/wIV2C_Ggxq0",
+    "plantingTime": "Spring, Early summer, Fall, Early winter",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/154120121160302616.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Coconut tree": {
+    "water": "Every 1-2 weeks",
+    "sunlight": "Full sun",
+    "toxic": null,
+    "video": null,
+    "plantingTime": "Spring, Fall",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/201174919527104512.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Madagascar periwinkle": {
+    "water": "Twice per week",
+    "sunlight": "Full sun",
+    "toxic": "Toxic to Human & Pets",
+    "video": "https://youtu.be/PSXfNQdi4Rw",
+    "plantingTime": "Mid spring, Late spring, Summer, Fall",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/152618265586171905.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Banyan fig": {
+    "water": "Every 1-2 weeks",
+    "sunlight": "Partial sun",
+    "toxic": "Toxic to Pets",
+    "video": null,
+    "plantingTime": "Spring, Fall",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/201210516216086528.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  },
+  "Golden trumpet": {
+    "water": "Every week",
+    "sunlight": "Full sun",
+    "toxic": "Toxic to Humans",
+    "video": null,
+    "plantingTime": "Spring, Fall",
+    "uses": null,
+    "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/201161892891262976.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
+  }
+}

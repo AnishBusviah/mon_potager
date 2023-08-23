@@ -31,13 +31,13 @@ class _ForYouState extends State<ForYou> {
         automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.close, color: Colors.white, size: 40,))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       },
+        //       icon: Icon(Icons.close, color: Colors.white, size: 40,))
+        // ],
       ),
       body: PageView(
         scrollDirection: Axis.vertical,

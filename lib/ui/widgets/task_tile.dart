@@ -8,10 +8,9 @@ import 'package:mon_potager/ui/task_type.dart';
 class TaskTile extends StatelessWidget {
   final Task? task;
 
-  TaskTile({
-    required this.task,
-    a,
-  });
+  final TaskType? selectedTaskType;
+
+  TaskTile({required this.task, required this.selectedTaskType});
 
   @override
   Widget build(BuildContext context) {
@@ -34,98 +33,97 @@ class TaskTile extends StatelessWidget {
           Color.fromARGB(255, 31, 107, 87),
         ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
       ),
-      child: Row(children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                task?.title ?? "",
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.access_time_rounded,
-                    color: Colors.grey[200],
-                    size: 18,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                selectedTaskType?.image ?? Container(),
+                const SizedBox(width: 12),
+                Text(
+                  task?.title ?? "",
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
-                  SizedBox(width: 4),
-                  Text(
-                    "${task!.startTime} - ${task!.endTime}",
-                    style: GoogleFonts.lato(
-                      textStyle:
-                          TextStyle(fontSize: 13, color: Colors.grey[100]),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (selectedTaskType != null) selectedTaskType!.image,
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      color: Colors.grey[200],
+                      size: 18,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12),
-              Text(
-                task?.note ?? "",
-                style: GoogleFonts.lato(
-                  textStyle: TextStyle(fontSize: 15, color: Colors.grey[100]),
+                    SizedBox(width: 4),
+                    Text(
+                      "${task!.startTime}",
+                      style: GoogleFonts.lato(
+                        textStyle:
+                        TextStyle(fontSize: 13, color: Colors.grey[100]),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          height: 60,
-          width: 0.5,
-          color: Colors.grey[200]!.withOpacity(0.7),
-        ),
-        RotatedBox(
-          quarterTurns: 3,
-          child: Text(
-            task!.isCompleted == 1 ? "COMPLETED" : "TODO",
-            style: GoogleFonts.lato(
-              textStyle: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              ],
             ),
           ),
-        ),
-      ]),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            height: 60,
+            width: 0.5,
+            color: Colors.grey[200]!.withOpacity(0.7),
+          ),
+          RotatedBox(
+            quarterTurns: 3,
+            child: Text(
+              task!.isCompleted == 1 ? "COMPLETED" : "TODO",
+              style: GoogleFonts.lato(
+                textStyle: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  _getimage(todo) {
-    switch (todo) {
-      case "water":
-        {
-          return ("assets/water.jpg");
-        }
-
-      case "Fertiliser":
-        {
-          return ("assets/fertilise.jpg");
-        }
-
-      case "Repot":
-        {
-          return ("assets/repot.jpg");
-        }
-
-      case "Light":
-        {
-          return ("assets/light.jpg");
-        }
+  Widget _getBGImage(int? image) {
+    switch (image) {
+      case 1:
+        return Image.network(
+          "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,m_25&v=1.0",
+          fit: BoxFit.cover,
+          scale: 0.5,
+        );
+      case 2:
+        return Image.network(
+          "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0",
+          fit: BoxFit.cover,
+        );
+      case 3:
+        return Image.network(
+            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_sunlight_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0");
       default:
-        {
-          return ("assets/fertilise.png");
-        }
+        return Image.network(
+          "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_28&v=1.0",
+          fit: BoxFit.cover,
+        );
     }
   }
 }

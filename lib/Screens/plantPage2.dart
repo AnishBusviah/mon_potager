@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
+import 'package:mon_potager/Screens/CareDetails.dart';
+import 'package:mon_potager/Screens/CareGuideCarousel.dart';
 import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/plantDetailsDisplay.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -11,169 +14,171 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../models/searchResponseItem.dart';
 
 class plantPage2 extends StatefulWidget {
-  plantPage2(this.plantDetailsMap, {
-    Key? key,
-  }) : super(key: key);
+  plantPage2({Key? key, required this.plantName}) : super(key: key);
 
-  final Map<String, dynamic> plantDetailsMap;
+  final String plantName;
+
+  late Map<String, dynamic> plantData;
+  late List<dynamic> usesList;
 
   @override
   State<plantPage2> createState() => _plantPage2State();
 }
 
 class _plantPage2State extends State<plantPage2> {
-  var plantDetails;
-  var plantData;
-  var controller;
+  // var plantDetails;
+  // var plantData;
+  // var controller;
 
-  Future<void> getPlantData(Map<String, dynamic> plantMap) async {
-    plantData = new searchResult.fromJson(plantMap);
-
-    plantDetails = new plantDetailsDisplay();
-
-    plantDetails.setName(plantData.commonName);
-    plantDetails.setImage(plantData.thumbnail);
-    plantDetails.setLatinName(plantData.latinName);
-
-    // WebView Code
-    // controller = WebViewController()
-    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    //   ..runJavaScriptReturningResult("document.querySelector('#care_guide_layout > div > div.care-guide-wrap > div.care-guide-items-wrap > div.care-guide-items > div:nth-child(1) > div.care-guide-item-content > div')")
-    //   ..setBackgroundColor(const Color(0x00000000))
-    //   ..setNavigationDelegate(
-    //     NavigationDelegate(
-    //       onProgress: (int progress) {
-    //         // Update loading bar.
-    //       },
-    //       onPageStarted: (String url) {},
-    //       onPageFinished: (String url) {},
-    //       onWebResourceError: (WebResourceError error) {},
-    //       // onNavigationRequest: (NavigationRequest request) {
-    //       //   if (request.url.startsWith('https://www.youtube.com/')) {
-    //       //     return NavigationDecision.prevent;
-    //       //   }
-    //       //   return NavigationDecision.navigate;
-    //       // },
-    //     ),
-    //   )..loadRequest(Uri.parse('https://www.picturethisai.com/care/${plantDetails.latinName}.html#Cultivation:FertilizerDetail'));
-
-    // setState(() {
-    //   plantDetails.setDescription(plantDescription[0].toString());
-    //   plantDetails.setLatinName(scientificName[0].toString());
-    // });
-  }
+  // Future<void> getPlantData(Map<String, dynamic> plantMap) async {
+  //   plantData = new searchResult.fromJson(plantMap);
+  //
+  //   plantDetails = new plantDetailsDisplay();
+  //
+  //   plantDetails.setName(plantData.commonName);
+  //   plantDetails.setImage(plantData.thumbnail);
+  //   plantDetails.setLatinName(plantData.latinName);
+  //
+  //   // WebView Code
+  //   // controller = WebViewController()
+  //   //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  //   //   ..runJavaScriptReturningResult("document.querySelector('#care_guide_layout > div > div.care-guide-wrap > div.care-guide-items-wrap > div.care-guide-items > div:nth-child(1) > div.care-guide-item-content > div')")
+  //   //   ..setBackgroundColor(const Color(0x00000000))
+  //   //   ..setNavigationDelegate(
+  //   //     NavigationDelegate(
+  //   //       onProgress: (int progress) {
+  //   //         // Update loading bar.
+  //   //       },
+  //   //       onPageStarted: (String url) {},
+  //   //       onPageFinished: (String url) {},
+  //   //       onWebResourceError: (WebResourceError error) {},
+  //   //       // onNavigationRequest: (NavigationRequest request) {
+  //   //       //   if (request.url.startsWith('https://www.youtube.com/')) {
+  //   //       //     return NavigationDecision.prevent;
+  //   //       //   }
+  //   //       //   return NavigationDecision.navigate;
+  //   //       // },
+  //   //     ),
+  //   //   )..loadRequest(Uri.parse('https://www.picturethisai.com/care/${plantDetails.latinName}.html#Cultivation:FertilizerDetail'));
+  //
+  //   // setState(() {
+  //   //   plantDetails.setDescription(plantDescription[0].toString());
+  //   //   plantDetails.setLatinName(scientificName[0].toString());
+  //   // });
+  // }
 
   @override
   void initState() {
-    getPlantData(widget.plantDetailsMap);
+    // getPlantData(widget.plantDetailsMap);
+    readPlantData(widget.plantName);
     super.initState();
   }
 
-  void getWebsiteData(String rawHtml) {
-    //print(rawHtml);
-    dom.Document plantCareHtml = dom.Document.html(rawHtml);
-    //print(plantCareHtml);
-
-    //print(waterInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
-
-    final plantDescriptionHtml = plantCareHtml
-        .querySelectorAll(
-        '#care_about_layout > div > div.care-about-content-wrapper > div.care-about-basic-info > div.care-about-description > div')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    // print(plantDescriptionHtml);
-
-    setState(() {
-      plantDetails.setLatinName(plantDetails.latinName.replaceAll("_", " "));
-
-      if (plantDescriptionHtml.length != 0) {
-        plantDetails.setDescription(
-            plantDescriptionHtml[0].replaceAll(RegExp('<[^>]*>'), ''));
-      } else {
-        plantDetails.setDescription("No Data Available");
-      }
-    });
-
-    final plantCareInfo = plantCareHtml
-        .querySelectorAll(
-        '#care_basic_guide_layout > div > div.care-basic-guide-wrapper > div)')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    //print(info.length);
-
-    final waterHtml = dom.Document.html(plantCareInfo[0]);
-    final fertilizerHtml = dom.Document.html(plantCareInfo[1]);
-    final sunlightHtml = dom.Document.html(plantCareInfo[2]);
-    final pruningHtml = dom.Document.html(plantCareInfo[3]);
-
-    final waterInfo = waterHtml
-        .querySelectorAll(
-        'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    final fertilizerInfo = fertilizerHtml
-        .querySelectorAll(
-        'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    final sunlightInfo = sunlightHtml
-        .querySelectorAll(
-        'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    final pruningInfo = pruningHtml
-        .querySelectorAll(
-        'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
-        .map((element) => element.innerHtml.trim())
-        .toList();
-
-    setState(() {
-      if (waterInfo.length == 0) {
-        plantDetails.setWaterDetails("No Data Available");
-      } else {
-        plantDetails
-            .setWaterDetails(waterInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
-      }
-
-      if (fertilizerInfo.length == 0) {
-        plantDetails.setFertilizationDetails("No Data Available");
-      } else {
-        plantDetails.setFertilizationDetails(
-            fertilizerInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
-      }
-
-      if (sunlightInfo.length == 0) {
-        plantDetails.setSunlightrDetails("No Data Available");
-      } else {
-        plantDetails.setSunlightDetails(
-            sunlightInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
-      }
-
-      if (pruningInfo.length == 0) {
-        plantDetails.setPruningDetails("No Data Available");
-      } else {
-        plantDetails.setPruningDetails(
-            pruningInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
-      }
-
-      // print(plantDetails.waterDetails);
-      // print(plantDetails.fertilizationDetails);
-      // print(plantDetails.sunlightDetails);
-      // print(plantDetails.pruningDetails);
-    });
-
-    // print(plantCareInfo[0].replaceAll('<div class="care-common-field-item"> <div class="care-common-field-title-wrapper" id="pc_Cultivation:WaterDetail"> <img data-src="/wiki-static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png" alt="Cultivation:WaterDetail" class="care-layout-title-wrap-icon" width="4.0rem" height="4.0rem"> <h3 class="care-layout-title-wrap-text"> Water </h3> </div> <div class="care-common-field-content-wrapper field-content-selected"> <div class="care-common-field-values-part"> <div class="care-common-field-value">    <div> ', ''));
-    // print(waterInfo);
-  }
-
+  // void getWebsiteData(String rawHtml) {
+  //   //print(rawHtml);
+  //   dom.Document plantCareHtml = dom.Document.html(rawHtml);
+  //   //print(plantCareHtml);
+  //
+  //   //print(waterInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //
+  //   final plantDescriptionHtml = plantCareHtml
+  //       .querySelectorAll(
+  //           '#care_about_layout > div > div.care-about-content-wrapper > div.care-about-basic-info > div.care-about-description > div')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   // print(plantDescriptionHtml);
+  //
+  //   setState(() {
+  //     plantDetails.setLatinName(plantDetails.latinName.replaceAll("_", " "));
+  //
+  //     if (plantDescriptionHtml.length != 0) {
+  //       plantDetails.setDescription(
+  //           plantDescriptionHtml[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //     } else {
+  //       plantDetails.setDescription("No Data Available");
+  //     }
+  //   });
+  //
+  //   final plantCareInfo = plantCareHtml
+  //       .querySelectorAll(
+  //           '#care_basic_guide_layout > div > div.care-basic-guide-wrapper > div)')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   //print(info.length);
+  //
+  //   final waterHtml = dom.Document.html(plantCareInfo[0]);
+  //   final fertilizerHtml = dom.Document.html(plantCareInfo[1]);
+  //   final sunlightHtml = dom.Document.html(plantCareInfo[2]);
+  //   final pruningHtml = dom.Document.html(plantCareInfo[3]);
+  //
+  //   final waterInfo = waterHtml
+  //       .querySelectorAll(
+  //           'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   final fertilizerInfo = fertilizerHtml
+  //       .querySelectorAll(
+  //           'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   final sunlightInfo = sunlightHtml
+  //       .querySelectorAll(
+  //           'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   final pruningInfo = pruningHtml
+  //       .querySelectorAll(
+  //           'div.care-common-field-item > div.care-common-field-content-wrapper.field-content-selected > div.care-common-field-values-part > div.care-common-field-value > div')
+  //       .map((element) => element.innerHtml.trim())
+  //       .toList();
+  //
+  //   setState(() {
+  //     if (waterInfo.length == 0) {
+  //       plantDetails.setWaterDetails("No Data Available");
+  //     } else {
+  //       plantDetails
+  //           .setWaterDetails(waterInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //     }
+  //
+  //     if (fertilizerInfo.length == 0) {
+  //       plantDetails.setFertilizationDetails("No Data Available");
+  //     } else {
+  //       plantDetails.setFertilizationDetails(
+  //           fertilizerInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //     }
+  //
+  //     if (sunlightInfo.length == 0) {
+  //       plantDetails.setSunlightrDetails("No Data Available");
+  //     } else {
+  //       plantDetails.setSunlightDetails(
+  //           sunlightInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //     }
+  //
+  //     if (pruningInfo.length == 0) {
+  //       plantDetails.setPruningDetails("No Data Available");
+  //     } else {
+  //       plantDetails.setPruningDetails(
+  //           pruningInfo[0].replaceAll(RegExp('<[^>]*>'), ''));
+  //     }
+  //
+  //     // print(plantDetails.waterDetails);
+  //     // print(plantDetails.fertilizationDetails);
+  //     // print(plantDetails.sunlightDetails);
+  //     // print(plantDetails.pruningDetails);
+  //   });
+  //
+  //   // print(plantCareInfo[0].replaceAll('<div class="care-common-field-item"> <div class="care-common-field-title-wrapper" id="pc_Cultivation:WaterDetail"> <img data-src="/wiki-static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png" alt="Cultivation:WaterDetail" class="care-layout-title-wrap-icon" width="4.0rem" height="4.0rem"> <h3 class="care-layout-title-wrap-text"> Water </h3> </div> <div class="care-common-field-content-wrapper field-content-selected"> <div class="care-common-field-values-part"> <div class="care-common-field-value">    <div> ', ''));
+  //   // print(waterInfo);
+  // }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 236, 238, 1),
       appBar: AppBar(
@@ -203,10 +208,8 @@ class _plantPage2State extends State<plantPage2> {
                         bottomLeft: Radius.circular(15)),
                     child: FittedBox(
                       fit: BoxFit.fitHeight,
-                      child: Image.network(
-                          "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/${plantDetails
-                              .image}?x-oss-process=image/format,webp/quality,q_70/resize,l_500&v=1.1",
-                          height: 50),
+                      child:
+                          Image.network(widget.plantData["image"], height: 50),
                     ),
                   ),
                 ),
@@ -322,7 +325,7 @@ class _plantPage2State extends State<plantPage2> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(26, 6, 18, 4),
-                                child: Text("Fertiliser",
+                                child: Text("Sowing",
                                     // Replace with your desired text
                                     style: TextStyle(
                                       fontSize: 14,
@@ -336,7 +339,7 @@ class _plantPage2State extends State<plantPage2> {
                                   Expanded(
                                     flex: 2,
                                     child: Image.network(
-                                        "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0",
+                                        "https://www.picturethisai.com/image-handle/website_cmsname/static/name/cc38e25d193e1293aee40adda32a352d/img/default_v2/icons/pc/icon_Planting Time_envelope@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0",
                                         height: 20,
                                         width: 20),
                                   ),
@@ -368,8 +371,8 @@ class _plantPage2State extends State<plantPage2> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(26, 6, 18, 4),
-                                child: Text(
-                                    "Pruning", // Replace with your desired text
+                                child: Text("Toxicity",
+                                    // Replace with your desired text
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -382,7 +385,7 @@ class _plantPage2State extends State<plantPage2> {
                                   Expanded(
                                     flex: 2,
                                     child: Image.network(
-                                        "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0",
+                                        "https://www.picturethisai.com/image-handle/website_cmsname/static/name/cc38e25d193e1293aee40adda32a352d/img/default_v2/icons/pc/icon_toxic@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0",
                                         height: 20,
                                         width: 20),
                                   ),
@@ -396,144 +399,139 @@ class _plantPage2State extends State<plantPage2> {
                   ),
                 ],
               ),
+              // Container(
+              //   margin: EdgeInsets.fromLTRB(15, 378, 15, 40),
+              //   padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
+              //   height: 600,
+              //   width: 550,
+              //   decoration: BoxDecoration(
+              //       // color: Color.fromARGB(168, 36, 139, 88),
+              //       borderRadius: BorderRadius.only(
+              //     topLeft: Radius.circular(025),
+              //     topRight: Radius.circular(0),
+              //     bottomLeft: Radius.circular(0),
+              //     bottomRight: Radius.circular(25),
+              //   )),
+              // ),
               Container(
-                margin: EdgeInsets.fromLTRB(15, 378, 15, 40),
-                padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
-                height: 600,
-                width: 550,
-                decoration: BoxDecoration(
-                  // color: Color.fromARGB(168, 36, 139, 88),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(025),
-                      topRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(25),
-                    )),
-              ),
-              Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(29, 410, 30, 60),
-                    padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 4 / 30,
-                    // was 100
-                    width: 500,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(219, 172, 242, 207),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.elliptical(12, 40),
-                          topRight: Radius.elliptical(12, 40),
-                          bottomLeft: Radius.elliptical(12, 40),
-                          bottomRight: Radius.elliptical(12, 40),
-                        )),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: "Common name: ",
-                            style: TextStyle(
-                              color: Color.fromARGB(200, 137, 136,
-                                  136), // Change the color of "Name:"
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: plantDetails.name,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: "Latin name: ",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 124, 126,
-                                  129), // Change the color of "Name:"
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
 
-                              height: 2,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: plantDetails.latinName,
-                                style: TextStyle(
-                                  height: 0.6,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors
-                                      .black, // Change the color of the name value
-                                ),
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 530, 20, 70),
-                padding: EdgeInsets.fromLTRB(30, 10, 60, 20),
-                height: 150,
-                width: 450,
+                margin: EdgeInsets.fromLTRB(29, 410, 30, 60),
+                padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
+                height: MediaQuery.of(context).size.height * 2 / 30,
+                // was 100
+                width: 500,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(213, 145, 216, 176),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                ),
+                    color: Color.fromARGB(219, 172, 242, 207),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.elliptical(12, 40),
+                      topRight: Radius.elliptical(12, 40),
+                      bottomLeft: Radius.elliptical(12, 40),
+                      bottomRight: Radius.elliptical(12, 40),
+                    )),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Description:",
-                      style: TextStyle(
-                        height: 1.5,
-                        color: Color.fromARGB(199, 10, 9, 9),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            opendescDialog();
-                          },
-                          child: Text(
-                            plantDetails.description,
+                    RichText(
+                      text: TextSpan(
+                        text: "Common name: ",
+                        style: TextStyle(
+                          color: Color.fromARGB(200, 137, 136,
+                              136), // Change the color of "Name:"
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: widget.plantName,
                             style: TextStyle(
-                              height: 1.9,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            maxLines:
-                            1, // Limit the number of lines to prevent overflow
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ))
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    // RichText(
+                    //   text: TextSpan(
+                    //     text: "Latin name: ",
+                    //     style: TextStyle(
+                    //       color: Color.fromARGB(255, 124, 126,
+                    //           129), // Change the color of "Name:"
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.bold,
+                    //
+                    //       height: 2,
+                    //     ),
+                    //     children: [
+                    //       TextSpan(
+                    //         text: plantDetails.latinName,
+                    //         style: TextStyle(
+                    //           height: 0.6,
+                    //           fontSize: 16,
+                    //           fontWeight: FontWeight.bold,
+                    //           fontStyle: FontStyle.italic,
+                    //           color: Colors
+                    //               .black, // Change the color of the name value
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   textAlign: TextAlign.center,
+                    // ),
                   ],
                 ),
               ),
+              // Container(
+              //   margin: EdgeInsets.fromLTRB(20, 530, 20, 70),
+              //   padding: EdgeInsets.fromLTRB(30, 10, 60, 20),
+              //   height: 150,
+              //   width: 450,
+              //   decoration: BoxDecoration(
+              //     color: Color.fromARGB(213, 145, 216, 176),
+              //     borderRadius: BorderRadius.only(
+              //       topLeft: Radius.circular(30),
+              //       topRight: Radius.circular(30),
+              //       bottomLeft: Radius.circular(30),
+              //       bottomRight: Radius.circular(30),
+              //     ),
+              //   ),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Text(
+              //         "Description:",
+              //         style: TextStyle(
+              //           height: 1.5,
+              //           color: Color.fromARGB(199, 10, 9, 9),
+              //           fontSize: 20,
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //       Expanded(
+              //           child: InkWell(
+              //         onTap: () {
+              //           // opendescDialog();
+              //         },
+              //         child: Text(
+              //           "Desc",
+              //           // plantDetails.description,
+              //           style: TextStyle(
+              //             height: 1.9,
+              //             fontSize: 18,
+              //             fontWeight: FontWeight.bold,
+              //             color: Colors.black,
+              //           ),
+              //           maxLines:
+              //               1, // Limit the number of lines to prevent overflow
+              //           overflow: TextOverflow.ellipsis,
+              //         ),
+              //       ))
+              //     ],
+              //   ),
+              // ),
               // Padding(
               //   padding: const EdgeInsets.only(top: 660, left: 130),
               //   child: SizedBox(
@@ -544,37 +542,159 @@ class _plantPage2State extends State<plantPage2> {
               //         style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour,)),
               //   ),
               // ),
-              Offstage(
-                child: WebView(
-                  initialUrl:
-                  'https://www.picturethisai.com/care/${plantData
-                      .latinName}.html',
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated:
-                      (WebViewController webViewController) async {
-                    controller = webViewController;
-                  },
-                  onPageFinished: (_) async {
-                    final sourceHtml =
-                    await controller.runJavascriptReturningResult(
-                        'new XMLSerializer().serializeToString(document)');
+              // Offstage(
+              //   child: WebView(
+              //     initialUrl:
+              //         'https://www.picturethisai.com/care/${plantData.latinName}.html',
+              //     javascriptMode: JavascriptMode.unrestricted,
+              //     onWebViewCreated:
+              //         (WebViewController webViewController) async {
+              //       controller = webViewController;
+              //     },
+              //     onPageFinished: (_) async {
+              //       final sourceHtml =
+              //           await controller.runJavascriptReturningResult(
+              //               'new XMLSerializer().serializeToString(document)');
+              //
+              //       getWebsiteData(json.decode(sourceHtml));
+              //     },
+              //   ),
+              // ),
+              Padding(
+                padding: const EdgeInsets.only(top: 650, left: 32),
+                child: Container(
+                  width: 350,
+                  height: MediaQuery.of(context).size.height * 2 / 30,
+                  decoration: BoxDecoration(),
+                  child: ElevatedButton(
+                    onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CareGuideCarousel(),));},
+                    style: ElevatedButton.styleFrom(
 
-                    getWebsiteData(json.decode(sourceHtml));
-                  },
+                        backgroundColor: Color.fromARGB(213, 145, 216, 176),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+                          topLeft: Radius.elliptical(12, 40),
+                          topRight: Radius.elliptical(12, 40),
+                          bottomLeft: Radius.elliptical(12, 40),
+                          bottomRight: Radius.elliptical(12, 40),))
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Plant Care",
+                        style: TextStyle(
+                          color: Colors.black, // Change the color of "Name:"
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+
+                        ),
+                        children: [
+                          // TextSpan(
+                          //   text: widget.plantName,
+                          //   style: TextStyle(
+                          //     fontSize: 18,
+                          //     fontWeight: FontWeight.bold,
+                          //
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ),
-            ],
+
+              Padding(
+                padding: const EdgeInsets.only(top: 80-13),
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(29, 410, 30, 60),
+                  padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
+                  height: MediaQuery.of(context).size.height * 5 / 30 +16,
+                  // was 100
+                  width: 500,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(219, 172, 242, 207),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.elliptical(12, 40),
+                        topRight: Radius.elliptical(12, 40),
+                        bottomLeft: Radius.elliptical(12, 40),
+                        bottomRight: Radius.elliptical(12, 40),
+                      )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: "Uses: ",
+                          style: TextStyle(
+                            color: Color.fromARGB(200, 137, 136, 136), // Change the color of "Name:"
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 4 / 30,
+                          child: ListView.builder(
+                            itemCount: widget.usesList.length,
+
+                            itemBuilder: (context, index) {
+                              return Text(("${index+1}. ${widget.usesList[index]}"), style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),);
+                            },
+                          ),
+                        ),
+                      ),
+                      // RichText(
+                      //   text: TextSpan(
+                      //     text: "Latin name: ",
+                      //     style: TextStyle(
+                      //       color: Color.fromARGB(255, 124, 126,
+                      //           129), // Change the color of "Name:"
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.bold,
+                      //
+                      //       height: 2,
+                      //     ),
+                      //     children: [
+                      //       TextSpan(
+                      //         text: plantDetails.latinName,
+                      //         style: TextStyle(
+                      //           height: 0.6,
+                      //           fontSize: 16,
+                      //           fontWeight: FontWeight.bold,
+                      //           fontStyle: FontStyle.italic,
+                      //           color: Colors
+                      //               .black, // Change the color of the name value
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   textAlign: TextAlign.center,
+                      // ),
+                    ],
+                  ),
+                ),
+              ),],
           ),
         ],
       ),
     );
   }
 
-  Future openwaterDialog() =>
-      showDialog(
+  Future openwaterDialog() => showDialog(
         context: context,
-        builder: ((context) =>
-            Container(
+        builder: ((context) => Container(
               child: AlertDialog(
                 backgroundColor: Color.fromARGB(237, 194, 236, 222),
                 title: Text(
@@ -582,7 +702,7 @@ class _plantPage2State extends State<plantPage2> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 content: Text(
-                  plantDetails.waterDetails,
+                  widget.plantData["water"],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
                 ),
@@ -600,11 +720,9 @@ class _plantPage2State extends State<plantPage2> {
     Navigator.of(context).pop();
   }
 
-  Future opensunDialog() =>
-      showDialog(
+  Future opensunDialog() => showDialog(
         context: context,
-        builder: ((context) =>
-            Container(
+        builder: ((context) => Container(
               child: AlertDialog(
                 backgroundColor: Color.fromARGB(237, 194, 236, 222),
                 title: Text(
@@ -612,7 +730,7 @@ class _plantPage2State extends State<plantPage2> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 content: Text(
-                  plantDetails.sunlightDetails,
+                  widget.plantData["sunlight"],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
                 ),
@@ -630,19 +748,17 @@ class _plantPage2State extends State<plantPage2> {
     Navigator.of(context).pop();
   }
 
-  Future openFertiliserDialog() =>
-      showDialog(
+  Future openFertiliserDialog() => showDialog(
         context: context,
-        builder: ((context) =>
-            Container(
+        builder: ((context) => Container(
               child: AlertDialog(
                 backgroundColor: Color.fromARGB(237, 194, 236, 222),
                 title: Text(
-                  "Fertilisers",
+                  "Sowing",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 content: Text(
-                  plantDetails.fertilizationDetails,
+                  widget.plantData["plantingTime"],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
                 ),
@@ -660,19 +776,19 @@ class _plantPage2State extends State<plantPage2> {
     Navigator.of(context).pop();
   }
 
-  Future openPruningDialog() =>
-      showDialog(
+  Future openPruningDialog() => showDialog(
         context: context,
-        builder: ((context) =>
-            Container(
+        builder: ((context) => Container(
               child: AlertDialog(
                 backgroundColor: Color.fromARGB(237, 194, 236, 222),
                 title: Text(
-                  "Pruning",
+                  "Toxicity",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 content: Text(
-                  plantDetails.fertilizationDetails,
+                  widget.plantData["toxic"] == null
+                      ? "No Data Available"
+                      : widget.plantData["toxic"],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
                 ),
@@ -686,47 +802,64 @@ class _plantPage2State extends State<plantPage2> {
             )),
       );
 
+  Future openCareGuide() => showDialog(context: context, builder: ((context) => Container(child: CareGuideCarousel())));
+
   void o() {
     Navigator.of(context).pop();
   }
 
-  Future opendescDialog() =>
-      showDialog(
-        context: context,
-        builder: ((context) =>
-            Container(
-              child: AlertDialog(
-                backgroundColor: Color.fromARGB(237, 194, 236, 222),
-                title: Text(
-                  "Description",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                content: Text(
-                  plantDetails.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    child: Text('OK'),
-                    onPressed: ok,
-                  ),
-                ],
-              ),
-            )),
-      );
+  // Future opendescDialog() => showDialog(
+  //       context: context,
+  //       builder: ((context) => Container(
+  //             child: AlertDialog(
+  //               backgroundColor: Color.fromARGB(237, 194, 236, 222),
+  //               title: Text(
+  //                 "Description",
+  //                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+  //               ),
+  //               content: Text(
+  //                 plantDetails.description,
+  //                 textAlign: TextAlign.center,
+  //                 style: TextStyle(
+  //                   fontSize: 22,
+  //                   fontWeight: FontWeight.w400,
+  //                   height: 1.5,
+  //                 ),
+  //               ),
+  //               actions: [
+  //                 TextButton(
+  //                   child: Text('OK'),
+  //                   onPressed: ok,
+  //                 ),
+  //               ],
+  //             ),
+  //           )),
+  //     );
 
   void oK() {
     Navigator.of(context).pop();
   }
+
 //Column(
 //   children: [
 //     SizedBox(child: Image.network("https://www.picturethisai.com/image-handle/website_cmsname/image/1080/${plantDetails.image}?x-oss-process=image/format,webp/quality,q_70/resize,l_500&v=1.1"))
 //     ,
 //
 //   ],
+
+  Future readPlantData(String plantName) async {
+    final plantDataJson =
+        await rootBundle.loadString("assets/plants/plantDB.json");
+    final decodedPlantData = await jsonDecode(plantDataJson);
+
+    setState(() {
+      widget.plantData = decodedPlantData[plantName];
+
+    });
+
+    setState(() {
+      widget.usesList = widget.plantData["uses"];
+      // print(widget.usesList.length);
+    });
+  }
 }

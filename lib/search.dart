@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_potager/Screens/plantPage2.dart';
+import 'package:mon_potager/Screens/plantPage3.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -122,7 +123,7 @@ class Search extends SearchDelegate {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => plantPage2(
+                      builder: (context) => plantPage3(
                         resultsMap["indexModels"][index],
                       ),
                     ),
@@ -172,7 +173,7 @@ class Search extends SearchDelegate {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => plantPage2(
+                            builder: (context) => plantPage3(
                               resultsMap["indexModels"][index],
                             ),
                           ),

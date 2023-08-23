@@ -8,10 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_potager/Navigation.dart';
 import 'package:mon_potager/Screens/plantPage.dart';
+import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/PlantAssessmentResults.dart';
 import 'package:path_provider/path_provider.dart';
 import './Camera.dart';
 import 'Screens/DiagnosisResultsScreen.dart';
+
+import 'package:image_cropper/image_cropper.dart';
 
 class CounterStorage {
   Future<String> get _localPath async {
@@ -34,28 +37,84 @@ class CounterStorage {
 }
 
 class displayPicture extends StatefulWidget {
-  const displayPicture(this.image, this.previousPage, this.title, {Key? key})
+  displayPicture(this.image, this.previousPage, this.title, {Key? key})
       : super(key: key);
 
-  final File image;
+  File image;
+
   final String previousPage;
   final String title;
 
+
+
+
+
+
   @override
   State<displayPicture> createState() => _displayPictureState();
+
+
+
 }
 
 class _displayPictureState extends State<displayPicture> {
+  CroppedFile? croppedFile;
+
+  Future cropImage() async {
+      croppedFile = await ImageCropper().cropImage(
+      sourcePath: widget.image.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: pageTitleColour,
+            toolbarWidgetColor: Colors.white,
+            activeControlsWidgetColor: pageTitleColour,
+
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+      ],
+
+
+    );
+
+      // setState(() {
+      //
+      // });
+    // return File(croppedFile!.path);
+
+    setState(() {
+      widget.image = File(croppedFile!.path);
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: pageTitleColour,
+          child: Icon(CupertinoIcons.crop),
+          elevation: 0,
+          onPressed: () {
+            cropImage();
+          },
+        ),
         appBar: AppBar(
+          backgroundColor: pageTitleColour,
           title: Text("Confirm Picture?"),
         ),
         body: Center(
             child: Container(
-          child: Image.file(widget.image),
+          child: croppedFile == null? Image.file(widget.image) : Image.file(File(croppedFile!.path)),
         )),
         bottomNavigationBar: BottomAppBar(
           height: MediaQuery.of(context).size.height * 1 / 7,
@@ -142,12 +201,13 @@ class _displayPictureState extends State<displayPicture> {
                       //     "---------------------------------------------------");
 
                       ///READING JSON
-                      final response = await rootBundle
-                          .loadString("assets/health.json");
+                      final response =
+                          await rootBundle.loadString("assets/health.json");
                       final decodedResponse = await jsonDecode(response);
 
                       print(decodedResponse["health_assessment"]);
-                      final Map<String, dynamic> healthAssessment = decodedResponse["health_assessment"];
+                      final Map<String, dynamic> healthAssessment =
+                          decodedResponse["health_assessment"];
 
                       final mappedJsonResponse =
                           new PlantAssessmentResults.fromJson(healthAssessment);

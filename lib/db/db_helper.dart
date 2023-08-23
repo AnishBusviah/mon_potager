@@ -19,12 +19,11 @@ class DBHelper {
           print("Create a new one");
           return db.execute(
             "CREATE TABLE $_tableName("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "title STRING,note TEXT,date STRING,"
-            "startTime STRING,endTime STRING,"
-            "todo TEXT,"
-            "remind INTEGER,repeat STRING,"
-            "isCompleted INTEGER) ",
+                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                "title STRING,date STRING,"
+                "startTime STRING,"
+                "todo TEXT,"
+                "isCompleted INTEGER) ",
           );
         },
       );

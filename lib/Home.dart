@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mon_potager/search.dart';
 import 'package:mon_potager/ui/reminder_screen.dart';
+import 'package:mon_potager/widgets/WhatCanIGrow.dart';
 import 'dart:ui';
 
 import 'Screens/ForYou.dart';
@@ -16,6 +19,7 @@ import 'package:mon_potager/utils.dart';
 import './utils.dart';
 import 'Navigation.dart';
 import 'bottomNavBar.dart';
+import 'models/Colours.dart';
 import 'models/DrawerWidget.dart';
 
 class Scene extends StatefulWidget {
@@ -25,13 +29,21 @@ class Scene extends StatefulWidget {
 
 class _SceneState extends State<Scene> {
   int _currentScreen = 0;
-  Color _unselected = Colors.black;
-  Color _selected = Color.fromRGBO(64, 97, 80, 1);
-  List<Color> _icon = [Colors.black, Colors.black, Colors.black, Colors.black];
+  Color _unselected = iconColour2;
+  Color _selected = Color.fromRGBO(212, 233, 214, 1);
+
+  // Color.fromRGBO(64, 97, 80, 1);
+  List<Color> _icon = [
+    iconColour2,
+    iconColour2,
+    iconColour2,
+    iconColour2,
+  ];
 
   static List<Widget> _screenOptions = <Widget>[
     Home(),
-    MyGarden(),
+    ForYou(),
+    // MyGarden(),
     ReminderScreen(),
     logInScreen(),
   ];
@@ -66,6 +78,17 @@ class _SceneState extends State<Scene> {
                   color: Colors.black, size: 32, opticalSize: 100),
               backgroundColor: Colors.transparent,
               elevation: 0,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showSearch(context: context, delegate: Search());
+                  },
+                  icon: Icon(
+                    CupertinoIcons.search,
+                  ),
+                ),
+              ],
+
               // leading: Icon(
               //   opticalSize: 15,
               //   weight: 100,
@@ -154,13 +177,13 @@ class _SceneState extends State<Scene> {
       // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: bottomNavColor,
+        color: Color.fromRGBO(129, 164, 131, 1),
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
         height: 60,
         child: Container(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               MaterialButton(
                   // color: Colors.blue,
@@ -172,7 +195,10 @@ class _SceneState extends State<Scene> {
                         Icons.home,
                         color: _icon[0],
                       ),
-                      Text("Home")
+                      Text(
+                        "Home",
+                        style: TextStyle(color: _icon[0]),
+                      )
                     ],
                   ),
                   onPressed: () {
@@ -182,27 +208,34 @@ class _SceneState extends State<Scene> {
                       },
                     );
                   }),
-              MaterialButton(
-                minWidth: 10,
-                // color: Colors.green,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.search), Text("Search")],
-                ),
-                onPressed: () {
-                  showSearch(context: context, delegate: Search());
-                },
-              ),
+              // MaterialButton(
+              //   minWidth: 10,
+              //   // color: Colors.green,
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [Icon(CupertinoIcons.search), Text("Search")],
+              //   ),
+              //   onPressed: () {
+              //     showSearch(context: context, delegate: Search());
+              //   },
+              // ),
               MaterialButton(
                 // color: Colors.red,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ImageIcon(
-                      AssetImage('assets/icons/icons8-garden-50.png'),
+                    // ImageIcon(
+                    //   AssetImage('assets/icons/icons8-garden-50.png'),
+                    //   color: _icon[1],
+                    // ),
+                    Icon(
+                      Icons.lightbulb,
                       color: _icon[1],
                     ),
-                    Text("My Garden")
+                    Text(
+                      "Tips",
+                      style: TextStyle(color: _icon[1]),
+                    )
                   ],
                 ),
                 onPressed: () {
@@ -222,7 +255,10 @@ class _SceneState extends State<Scene> {
                     ImageIcon(
                         AssetImage('assets/icons/icons8-reminders-50.png'),
                         color: _icon[2]),
-                    Text("Tasks")
+                    Text(
+                      "Tasks",
+                      style: TextStyle(color: _icon[2]),
+                    )
                   ],
                 ),
                 onPressed: () {
@@ -233,27 +269,27 @@ class _SceneState extends State<Scene> {
                   );
                 },
               ),
-              MaterialButton(
-                // color: Colors.blue,
-                minWidth: 10,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.person,
-                      color: _icon[3],
-                    ),
-                    Text("Profile")
-                  ],
-                ),
-                onPressed: () {
-                  setState(
-                    () {
-                      _changeScreen(3);
-                    },
-                  );
-                },
-              ),
+              // MaterialButton(
+              //   // color: Colors.blue,
+              //   minWidth: 10,
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Icon(
+              //         Icons.person,
+              //         color: _icon[3],
+              //       ),
+              //       Text("Profile")
+              //     ],
+              //   ),
+              //   onPressed: () {
+              //     setState(
+              //       () {
+              //         _changeScreen(3);
+              //       },
+              //     );
+              //   },
+              // ),
             ],
           ),
           // Row(
@@ -1351,6 +1387,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final FlutterTts flutterTts = FlutterTts();
+  bool spokenDiagnose = false;
+  bool spokenIdentify = false;
+  bool spoken = false;
+
+  void speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setVolume(0.5);
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.setPitch(1); // 0.5 to 1.5
+    await flutterTts.speak(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 390;
@@ -1362,253 +1411,329 @@ class _HomeState extends State<Home> {
     Color iconColor2 = Color.fromRGBO(212, 233, 214, 1);
     Color iconColor3 = Color.fromRGBO(129, 164, 131, 1);
 
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                //color: Colors.blue,
-                height: deviceHeight * 0.30,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    // BoxShadow(
-                    //   color: Colors.grey.withOpacity(0.5),
-                    //   spreadRadius: 10,
-                    //   blurRadius: 10,
-                    //   offset: Offset(0, 10), // changes position of shadow
-                    // ),
-                  ],
-                  // borderRadius: BorderRadius.circular(50),
-                  image: DecorationImage(
-                    opacity: .7,
-                    image: AssetImage('assets/appBar_Image.jpg'),
-                    fit: BoxFit.fill,
+    return Listener(
+      onPointerMove: (PointerMoveEvent event) {
+        print("Coord: ${event.position.dx},${event.position.dy}");
+        if ((event.position.dx >= 41 && event.position.dx <= 90) &&
+            (event.position.dy >= 282 && event.position.dy <= 319)) {
+          if (!spokenDiagnose) {
+            speak("Diagnose Plant");
+            setState(() {
+              spokenDiagnose = true;
+              spokenIdentify = false;
+            });
+          }
+        }
+        if ((event.position.dx >= 174 && event.position.dx <= 222) &&
+            (event.position.dy >= 282 && event.position.dy <= 319)) {
+          if (!spokenIdentify) {
+            speak("Identify Plant");
+            setState(() {
+              spokenDiagnose = false;
+              spokenIdentify = true;
+            });
+          }
+        }
+      },
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  //color: Colors.blue,
+                  height: deviceHeight * 0.30,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      // BoxShadow(
+                      //   color: Colors.grey.withOpacity(0.5),
+                      //   spreadRadius: 10,
+                      //   blurRadius: 10,
+                      //   offset: Offset(0, 10), // changes position of shadow
+                      // ),
+                    ],
+                    // borderRadius: BorderRadius.circular(50),
+                    image: DecorationImage(
+                      opacity: .7,
+                      image: AssetImage('assets/appBar_Image.jpg'),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 230),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 4 / 20,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(250, 250, 250, 1),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: iconColor,
-                                  ),
-                                  //color: Colors.green,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CameraRoute(
-                                                    "Diagnose Plant")),
-                                      );
-                                    },
-                                    icon: ImageIcon(
-                                      AssetImage(
-                                          "assets/icons/diagnose_plant_2.png"),
-                                      size: 40,
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 230),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 4 / 20,
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(250, 250, 250, 1),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: iconColor,
+                                    ),
+                                    //color: Colors.green,
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        speak("Diagnose Plant");
+                                        print("Diagnose Plant");
+                                      },
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CameraRoute(
+                                                        "Diagnose Plant")),
+                                          );
+                                        },
+                                        icon: ImageIcon(
+                                          AssetImage(
+                                              "assets/icons/diagnose_plant_2.png"),
+                                          size: 40,
+                                          color: iconColour2,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    "Diagnose",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Diagnose",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: iconColour2),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: iconColor,
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CameraRoute(
-                                                    "Identify Plant")),
-                                      );
-                                    },
-                                    icon: ImageIcon(
-                                      AssetImage(
-                                          "assets/icons/identify_icon_2.png"),
-                                      size: 40,
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: iconColor,
+                                    ),
+                                    child: MouseRegion(
+                                      onHover: (PointerEvent details) {
+                                        speak("Identify Plant");
+                                        print("Enter");
+                                      },
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CameraRoute(
+                                                        "Identify Plant")),
+                                          );
+                                        },
+                                        icon: ImageIcon(
+                                          AssetImage(
+                                              "assets/icons/identify_icon_2.png"),
+                                          size: 40,
+                                          color: iconColour2,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    "Identify",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Identify",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: iconColour2),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              // Column(
+                              //   children: [
+                              //     Container(
+                              //       height: 60,
+                              //       width: 60,
+                              //       decoration: BoxDecoration(
+                              //         borderRadius: BorderRadius.circular(15),
+                              //         color: iconColor,
+                              //       ),
+                              //       child: IconButton(
+                              //         onPressed: () {
+                              //           Navigator.push(
+                              //               context,
+                              //               MaterialPageRoute(
+                              //                   builder: (context) => ForYou()));
+                              //         },
+                              //         icon: Icon(
+                              //           Icons.thumb_up_alt_outlined,
+                              //           size: 40,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     Padding(
+                              //       padding: const EdgeInsets.only(top: 5),
+                              //       child: Text(
+                              //         "For You",
+                              //         style: TextStyle(
+                              //           fontWeight: FontWeight.bold,
+                              //         ),
+                              //       ),
+                              //     )
+                              //   ],
+                              // ),
+                              Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: iconColor,
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MyGarden()));
+                                      },
+                                      icon: ImageIcon(
+                                        AssetImage(
+                                            "assets/icons/icons8-garden-50.png"),
+                                        size: 37,
+                                        color: iconColour2,
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: iconColor,
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ForYou()));
-                                    },
-                                    icon: Icon(
-                                      Icons.thumb_up_alt_outlined,
-                                      size: 40,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "Garden",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: iconColour2),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    "For You",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            // Container(
-                            //   height: 70,
-                            //   width: 70,
-                            //   decoration: BoxDecoration(
-                            //     borderRadius: BorderRadius.circular(15),
-                            //     color: Colors.green,
-                            //   ),
-                            //   child: IconButton(
-                            //     onPressed: () {
-                            //       Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) => RecScreen2()));
-                            //     },
-                            //     icon: Icon(
-                            //       Icons.thumb_up_alt_outlined,
-                            //       size: 40,
-                            //     ),
-                            //   ),
-                            // ),
-                          ],
+                                  )
+                                ],
+                              ),
+                              // Container(
+                              //   height: 70,
+                              //   width: 70,
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(15),
+                              //     color: Colors.green,
+                              //   ),
+                              //   child: IconButton(
+                              //     onPressed: () {
+                              //       Navigator.push(
+                              //           context,
+                              //           MaterialPageRoute(
+                              //               builder: (context) => RecScreen2()));
+                              //     },
+                              //     icon: Icon(
+                              //       Icons.thumb_up_alt_outlined,
+                              //       size: 40,
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  // Stack(
-                  //   children: [
-                  //     // Center(
-                  //     //   child: SizedBox(
-                  //     //     width: 8 / 9 * MediaQuery.of(context).size.width,
-                  //     //     child: GestureDetector(
-                  //     //       onTap: () =>
-                  //     //           showSearch(context: context, delegate: Search()),
-                  //     //       child: Container(
-                  //     //         child: Row(
-                  //     //           children: [
-                  //     //             Padding(
-                  //     //               padding: const EdgeInsets.all(8.0),
-                  //     //               child: Icon(
-                  //     //                 CupertinoIcons.search,
-                  //     //                 size: 32,
-                  //     //               ),
-                  //     //             ),
-                  //     //             Text("Search a plant"),
-                  //     //           ],
-                  //     //         ),
-                  //     //         decoration: BoxDecoration(
-                  //     //           borderRadius: BorderRadius.circular(25),
-                  //     //           border: Border.all(
-                  //     //             color: Color.fromRGBO(0, 0, 0, 1),
-                  //     //           ),
-                  //     //         ),
-                  //     //       ),
-                  //     //       // child: TextField(
-                  //     //       //   enabled: false,
-                  //     //       //   //controller: textController,
-                  //     //       //   decoration: InputDecoration(
-                  //     //       //     enabledBorder: OutlineInputBorder(
-                  //     //       //       borderSide: BorderSide(color: Colors.black)
-                  //     //       //     ),
-                  //     //       //     border: OutlineInputBorder(
-                  //     //       //       borderRadius: BorderRadius.circular(30),
-                  //     //       //       // borderSide: BorderSide(color: Colors.green)
-                  //     //       //     ),
-                  //     //       //     hintText: "Search a pl
-                  //     //       //       onPressed: () => showSearch(
-                  //     //       //     context: context, ant",
-                  //     //       //     prefixIcon: IconButton(delegate: Search()),
-                  //     //       //         icon: Icon(Icons.search)),
-                  //     //       //     // suffixIcon: IconButton(
-                  //     //       //     //   onPressed: () {
-                  //     //       //     //     textController.clear();
-                  //     //       //     //   },
-                  //     //       //     //   icon: Icon(
-                  //     //       //     //     Icons.close,
-                  //     //       //     //   ),
-                  //     //       //     // ),
-                  //     //       //   ),
-                  //     //       // ),
-                  //     //     ),
-                  //     //   ),
-                  //     // ),
-                  //
-                  //   ],
-                  // ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 310),
-                child: WeatherInfo(),
-              ),
-            ],
-          ),
+                    // Stack(
+                    //   children: [
+                    //     // Center(
+                    //     //   child: SizedBox(
+                    //     //     width: 8 / 9 * MediaQuery.of(context).size.width,
+                    //     //     child: GestureDetector(
+                    //     //       onTap: () =>
+                    //     //           showSearch(context: context, delegate: Search()),
+                    //     //       child: Container(
+                    //     //         child: Row(
+                    //     //           children: [
+                    //     //             Padding(
+                    //     //               padding: const EdgeInsets.all(8.0),
+                    //     //               child: Icon(
+                    //     //                 CupertinoIcons.search,
+                    //     //                 size: 32,
+                    //     //               ),
+                    //     //             ),
+                    //     //             Text("Search a plant"),
+                    //     //           ],
+                    //     //         ),
+                    //     //         decoration: BoxDecoration(
+                    //     //           borderRadius: BorderRadius.circular(25),
+                    //     //           border: Border.all(
+                    //     //             color: Color.fromRGBO(0, 0, 0, 1),
+                    //     //           ),
+                    //     //         ),
+                    //     //       ),
+                    //     //       // child: TextField(
+                    //     //       //   enabled: false,
+                    //     //       //   //controller: textController,
+                    //     //       //   decoration: InputDecoration(
+                    //     //       //     enabledBorder: OutlineInputBorder(
+                    //     //       //       borderSide: BorderSide(color: Colors.black)
+                    //     //       //     ),
+                    //     //       //     border: OutlineInputBorder(
+                    //     //       //       borderRadius: BorderRadius.circular(30),
+                    //     //       //       // borderSide: BorderSide(color: Colors.green)
+                    //     //       //     ),
+                    //     //       //     hintText: "Search a pl
+                    //     //       //       onPressed: () => showSearch(
+                    //     //       //     context: context, ant",
+                    //     //       //     prefixIcon: IconButton(delegate: Search()),
+                    //     //       //         icon: Icon(Icons.search)),
+                    //     //       //     // suffixIcon: IconButton(
+                    //     //       //     //   onPressed: () {
+                    //     //       //     //     textController.clear();
+                    //     //       //     //   },
+                    //     //       //     //   icon: Icon(
+                    //     //       //     //     Icons.close,
+                    //     //       //     //   ),
+                    //     //       //     // ),
+                    //     //       //   ),
+                    //     //       // ),
+                    //     //     ),
+                    //     //   ),
+                    //     // ),
+                    //
+                    //   ],
+                    // ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 350),
+                  child: WhatCanIGrow(),
+                  // WeatherInfo(),
+                ),
+              ],
+            ),
 
-          //Search Bar
-        ],
+            //Search Bar
+          ],
+        ),
       ),
     );
   }

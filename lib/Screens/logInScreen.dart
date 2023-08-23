@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_potager/Screens/ForumScreen.dart';
 import 'package:mon_potager/Screens/ProfileScreen.dart';
 import 'package:mon_potager/Screens/registerScreen.dart';
 
@@ -107,14 +108,15 @@ class _logInScreenState extends State<logInScreen> {
                   minimumSize: Size(100, 40), // foreground
                 ),
                 onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => ProfileScreen(),
-                  //     ));
-                  setState(() {
-                    isLoggedIn = true;
-                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ForumScreen(),
+                      )
+                  // setState(() {
+                  //   isLoggedIn = true;
+                  // },
+                  );
                 },
                 child: Text('Login'),
               )
@@ -251,6 +253,8 @@ class _logInScreenState extends State<logInScreen> {
   Widget build(BuildContext context) {
     return isLoggedIn == false
         ? Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(

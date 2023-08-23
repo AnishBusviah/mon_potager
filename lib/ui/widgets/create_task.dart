@@ -17,7 +17,7 @@ class CreateTask extends StatelessWidget {
           right: 30,
           bottom: 50,
         ),
-        width: 300,
+        width: 250,
         height: 50,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

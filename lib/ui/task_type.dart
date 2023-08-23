@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class TaskType {
   String name;
-  Widget image;
+  Image image;
   bool isChoose;
   TaskType(
-    this.name,
-    this.image,
-    this.isChoose,
-  );
+      this.name,
+      this.image,
+      this.isChoose,
+      );
+
+  get icon => null;
 }

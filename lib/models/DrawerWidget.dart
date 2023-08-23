@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:mon_potager/Screens/ForumScreen.dart';
 import 'package:mon_potager/models/Colours.dart';
 
+import '../Screens/logInScreen.dart';
+
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
 
@@ -51,12 +53,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           // trailing: Icon(Icons.forum),
                           leading: Icon(Icons.forum),
                           onTap: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => ForumScreen(),
+                            //     ));
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ForumScreen(),
+                                  builder: (context) => logInScreen(),
                                 ));
-                          }),
+                          },
+                      ),
                       ListTile(
                         title: Text("Settings"),
                         leading: Icon(Icons.settings),
