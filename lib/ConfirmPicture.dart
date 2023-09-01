@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_potager/Navigation.dart';
 import 'package:mon_potager/Screens/plantPage.dart';
+import 'package:mon_potager/Screens/plantPage3.dart';
 import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/PlantAssessmentResults.dart';
 import 'package:path_provider/path_provider.dart';
@@ -171,59 +172,59 @@ class _displayPictureState extends State<displayPicture> {
                       url = Uri.https("api.plant.id", "v2/health_assessment");
 
                       ///API Call
-                      // final response = await http.post(url,
-                      //     headers: {
-                      //       "Content-Type": "application/json",
-                      //       "Api-Key":
-                      //           "zPWL2eLrvkBuu5U9l5IfDdL7TVrNqa7nRIKc6R3W6z0YGKmv9D",
-                      //     },
-                      //     body: json.encode({
-                      //       "images": [imageBase64],
-                      //       "modifiers": ["similar_images"],
-                      //       "disease_details": [
-                      //         "common_names",
-                      //         "url",
-                      //         "description",
-                      //         "cause",
-                      //         "treatment"
-                      //       ]
-                      //     }));
+                      final response = await http.post(url,
+                          headers: {
+                            "Content-Type": "application/json",
+                            "Api-Key":
+                                "zPWL2eLrvkBuu5U9l5IfDdL7TVrNqa7nRIKc6R3W6z0YGKmv9D",
+                          },
+                          body: json.encode({
+                            "images": [imageBase64],
+                            "modifiers": ["similar_images"],
+                            "disease_details": [
+                              "common_names",
+                              "url",
+                              "description",
+                              "cause",
+                              "treatment"
+                            ]
+                          }));
 
-                      // final decodedResponse = await jsonDecode(response.body);
+                      final decodedResponse = await jsonDecode(response.body);
 
-                      // print(imageBase64);
-                      // print(response.statusCode);
-                      // print("----------------------------------------------");
-                      // print(response);
-                      // print("------------------------------------------------");
-                      // print(response.body);
-                      // print(
-                      //     "---------------------------------------------------");
+                      print(imageBase64);
+                      print(response.statusCode);
+                      print("----------------------------------------------");
+                      print(response);
+                      print("------------------------------------------------");
+                      print(response.body);
+                      print(
+                          "---------------------------------------------------");
 
-                      ///READING JSON
-                      final response =
-                          await rootBundle.loadString("assets/health.json");
-                      final decodedResponse = await jsonDecode(response);
-
-                      print(decodedResponse["health_assessment"]);
-                      final Map<String, dynamic> healthAssessment =
-                          decodedResponse["health_assessment"];
-
-                      final mappedJsonResponse =
-                          new PlantAssessmentResults.fromJson(healthAssessment);
+                      // ///READING JSON
+                      // final response =
+                      //     await rootBundle.loadString("assets/health.json");
+                      // final decodedResponse = await jsonDecode(response);
+                      //
+                      // print(decodedResponse["health_assessment"]);
+                      // final Map<String, dynamic> healthAssessment =
+                      //     decodedResponse["health_assessment"];
+                      //
+                      // final mappedJsonResponse =
+                      //     new PlantAssessmentResults.fromJson(healthAssessment);
 
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  DiagnosisResultsScreen(mappedJsonResponse)));
+                                  DiagnosisResultsScreen(decodedResponse, widget.image)));
 
                       ///Write to File
                       // CounterStorage storage = CounterStorage();
                       // storage.writeFile(decodedResponse);
 
                       ///Else Identify
-                    } else {
+                    } else if(widget.title == "Identify Plant") {
                       var url = Uri.https("api.plant.id", "v2/identify");
 
                       final response = await http.post(url,
@@ -265,8 +266,10 @@ class _displayPictureState extends State<displayPicture> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    plantPage(resultsMap["indexModels"][0])));
+                                    plantPage3(resultsMap["indexModels"][0], imageBase64)));
                       }
+                    }else if(widget.title == "Add Photos"){
+                      Navigator.of(context)..pop()..pop(widget.image);
                     }
 
                     print(url);

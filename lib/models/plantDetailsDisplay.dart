@@ -15,11 +15,11 @@ class plantDetailsDisplay{
     this.latinName = "Loading Data...";
     this.image = "Loading Data...";
     this.description = "Loading Data...";
-    this.waterDetails = "Loading Data...";
-    this.fertilizationDetails = "Loading Data...";
-    this.pruningDetails = "Loading Data...";
-    this.soilDetails = "Loading Data...";
-    this.sunlightDetails = "Loading Data...";
+    this.waterDetails = "No Data Available";
+    this.fertilizationDetails = "No Data Available";
+    this.pruningDetails = "No Data Available";
+    this.soilDetails = "No Data Available";
+    this.sunlightDetails = "No Data Available";
   }
 
 

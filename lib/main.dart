@@ -16,6 +16,7 @@ import '../ui/reminder_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../services/notification_services.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'db/db_helper.dart';
 
@@ -27,6 +28,7 @@ Future<void> main() async {
   //GetPermission();
 
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await DBHelper.initDb();
   await GetStorage.init();
   NotifyHelper().initializeNotification();

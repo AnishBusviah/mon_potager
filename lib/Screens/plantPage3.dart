@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
+import 'package:mon_potager/Screens/GardenScreen.dart';
 import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/plantDetailsDisplay.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -11,11 +14,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../models/searchResponseItem.dart';
 
 class plantPage3 extends StatefulWidget {
-  plantPage3(this.plantDetailsMap, {
-    Key? key,
-  }) : super(key: key);
+  plantPage3(this.plantDetailsMap, [this.imageBase64 = ""]) ;
 
   final Map<String, dynamic> plantDetailsMap;
+  String imageBase64;
 
   @override
   State<plantPage3> createState() => _plantPage3State();
@@ -95,11 +97,19 @@ class _plantPage3State extends State<plantPage3> {
       }
     });
 
+    // final plantCareInfo = plantCareHtml
+    //     .querySelectorAll(
+    //     '#care_basic_guide_layout > div > div.care-basic-guide-wrapper > div)')
+    //     .map((element) => element.innerHtml.trim())
+    //     .toList();
+
     final plantCareInfo = plantCareHtml
         .querySelectorAll(
-        '#care_basic_guide_layout > div > div.care-basic-guide-wrapper > div)')
+        '#care_guide_layout > div > div.care-guide-wrap > div.care-guide-items-wrap > div.care-guide-items > div:nth-child(2) > div.care-guide-item-content')
         .map((element) => element.innerHtml.trim())
         .toList();
+
+    print(plantCareInfo);
 
     //print(info.length);
 
@@ -171,7 +181,6 @@ class _plantPage3State extends State<plantPage3> {
     // print(waterInfo);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,13 +234,16 @@ class _plantPage3State extends State<plantPage3> {
                         onTap: () {
                           openwaterDialog();
                         },
-                        child: SizedBox(
+                        child: plantDetails.waterDetails == "Loading Data..."
+                            ? null
+                            : SizedBox(
                           height: 51,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.fromLTRB(35, 5, 18, 3),
+                                padding:
+                                EdgeInsets.fromLTRB(35, 5, 18, 3),
                                 child: Text(
                                     "Water", // Replace with your desired text
                                     style: TextStyle(
@@ -534,6 +546,26 @@ class _plantPage3State extends State<plantPage3> {
                   ],
                 ),
               ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 655, left: 135),
+                child: Container(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        addToGarden(name: plantDetails.name,
+                            latinName: plantDetails.latinName,
+                            sun: plantDetails.sunlightDetails,
+                            water: plantDetails.waterDetails,
+                            imageBase64: widget.imageBase64);
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyGarden(),));
+                      },
+                      child: Text("Add to Garden"),
+                      style:
+                      ElevatedButton.styleFrom(backgroundColor: solidGreen)),
+                ),
+              ),
+
               // Padding(
               //   padding: const EdgeInsets.only(top: 660, left: 130),
               //   child: SizedBox(
@@ -568,6 +600,44 @@ class _plantPage3State extends State<plantPage3> {
         ],
       ),
     );
+  }
+
+  Future addToGarden({
+    required String name,
+    required String latinName,
+    required String sun,
+    required String water,
+    required String imageBase64,}) async {
+
+    final database = FirebaseFirestore.instance.collection('myPlants');
+
+    //encode image in Base64
+
+    final json = {
+      'name': name,
+      'latinName': latinName,
+      'sun': sun,
+      'water': water,
+      'image': imageBase64,
+    };
+
+    /// Create document and write to Firebase
+    await database.add(json);
+    
+    final noteDatabase = FirebaseFirestore.instance.collection(name);
+
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    // print(formattedDate); // 2016-01-25
+
+    final noteJson = {
+      'date': formattedDate,
+      'note': "Plant Added",
+      'image': imageBase64,
+    };
+
+    await noteDatabase.add(noteJson);
   }
 
   Future openwaterDialog() =>
@@ -701,13 +771,15 @@ class _plantPage3State extends State<plantPage3> {
                   "Description",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                content: Text(
-                  plantDetails.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5,
+                content: SingleChildScrollView(
+                  child: Text(
+                    plantDetails.description,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                    ),
                   ),
                 ),
                 actions: [

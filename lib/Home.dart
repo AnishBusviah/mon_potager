@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mon_potager/search.dart';
 import 'package:mon_potager/ui/reminder_screen.dart';
+import 'package:mon_potager/widgets/WeatherWidget2.dart';
 import 'package:mon_potager/widgets/WhatCanIGrow.dart';
 import 'dart:ui';
 
@@ -1724,7 +1725,11 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 350),
+                  padding: const EdgeInsets.only(top: 300+70),
+                  child: WeatherInfo2(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 500),
                   child: WhatCanIGrow(),
                   // WeatherInfo(),
                 ),

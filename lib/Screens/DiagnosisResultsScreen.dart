@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/PlantAssessmentResults.dart';
+
+import 'TreatmentGuideCarousel.dart';
 
 class DiagnosisResultsScreen extends StatefulWidget {
   PlantAssessmentResults diagnosis;
+  File image;
 
-  DiagnosisResultsScreen(this.diagnosis, {Key? key}) : super(key: key);
+  DiagnosisResultsScreen(this.diagnosis, this.image, {Key? key})
+      : super(key: key);
 
   @override
   State<DiagnosisResultsScreen> createState() => _DiagnosisResultsScreenState();
@@ -18,22 +25,28 @@ class _DiagnosisResultsScreenState extends State<DiagnosisResultsScreen> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+            title: Text(
+              "Diagnosis Details",
+            ),
+            backgroundColor: pageTitleColour),
         body: Column(
           children: [
-            Container(
-              child: Center(
-                  child: Text(
-                "Image",
-                style: TextStyle(fontSize: 50),
-              )),
-              color: Colors.red,
-              height: 1 / 3 * MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                    image: DecorationImage(
+                        image: FileImage(widget.image), fit: BoxFit.fitWidth,)),
+                height: 6 / 20 * MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width * 19/20,
+              ),
             ),
             Container(
-              child: results(widget.diagnosis, screenWidth, screenHeight),
-              color: Colors.blue,
-              height: 0.636 * MediaQuery.of(context).size.height,
+              child: TreatmentGuideCarousel(widget.diagnosis),
+              // color: Colors.blue,
+              height: 0.58 * MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
             ),
           ],
@@ -81,7 +94,8 @@ PageView results(
                   child: Text(
                     diagnosis.diseases[0].diseaseDetails.description,
                     softWrap: true,
-                    style: dataStyle(isTitle: false),textAlign: TextAlign.left,
+                    style: dataStyle(isTitle: false),
+                    textAlign: TextAlign.left,
                   ))
             ],
           )
@@ -95,5 +109,8 @@ TextStyle dataStyle({required bool isTitle}) {
   if (isTitle)
     return TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   else
-    return TextStyle(fontSize: 20, wordSpacing: 5,);
+    return TextStyle(
+      fontSize: 20,
+      wordSpacing: 5,
+    );
 }
