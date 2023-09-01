@@ -4,36 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../models/task.dart';
 import '../task_type.dart';
 
-class TaskTile extends StatelessWidget {
+class TaskTile2 extends StatelessWidget {
   final Task? task;
+
   final TaskType? selectedTaskType;
-  final String? todo;
 
-  TaskTile({
-    required this.task,
-    required this.selectedTaskType,
-    required this.todo,
-    // required this.selectedImageIndex0,
-    // required this.selectedImageIndex1,
-    // required this.selectedImageIndex2,
-  });
-
+  TaskTile2({required this.task, required this.selectedTaskType});
   @override
   Widget build(BuildContext context) {
     print("Selected index in TaskTile: ${selectedTaskType?.imageIndex}");
     print("Is selected: ${selectedTaskType?.isChoose}");
-
-    final selectedImageIndex;
-
-    if(todo == "Fertilser"){
-      selectedImageIndex = 0;
-    }else if(todo == "Water"){
-      selectedImageIndex = 1;
-    }else if(todo == "Pruning"){
-      selectedImageIndex = 2;
-    }else selectedImageIndex = 4;
-
-
+    final selectedImageIndex = selectedTaskType?.imageIndex ?? 0;
     return Container(
       width: 350,
       height: 140,
@@ -65,23 +46,32 @@ class TaskTile extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    selectedImageIndex == 4? SizedBox() :
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:  Image.network(
-                          task?.imageUrls?[selectedImageIndex] ?? '',
-                          fit: BoxFit.cover,
-                          width: 60,
-                          height: 50,
+                    if (task?.imageUrls != null && task!.imageUrls!.isNotEmpty)
+                      Flexible(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // Container for displaying the first image based on selected index
+                              Container(
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                    child: Image.network(
+                                  task?.imageUrls?[1] ?? '',
+                                  fit: BoxFit.cover,
+                                  width: 60,
+                                  height: 50,
+                                )),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(width: 18),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +97,7 @@ class TaskTile extends StatelessWidget {
                         const SizedBox(width: 8, height: 5),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 4, right: 25, left: 25),
+                              top: 4, right: 25, left: 25), // Add top padding
                           child: Text(
                             task?.note ?? "",
                             style: GoogleFonts.lato(

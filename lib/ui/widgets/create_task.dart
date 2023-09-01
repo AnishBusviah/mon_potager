@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/Colours.dart';
+
 class CreateTask extends StatelessWidget {
   final String label;
   final Function()? onTap;
@@ -22,7 +24,7 @@ class CreateTask extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: const Color.fromRGBO(123, 214, 208, 98),
+          color:  pageTitleColour,
         ),
         child: Text(
           label,

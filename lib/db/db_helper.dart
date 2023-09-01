@@ -1,5 +1,6 @@
-import '../models/task.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../models/task.dart';
 
 class DBHelper {
   static Database? _db;
@@ -19,12 +20,23 @@ class DBHelper {
           print("Create a new one");
           return db.execute(
             "CREATE TABLE $_tableName("
-                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                "title STRING,date STRING,"
-                "startTime STRING,"
-                "todo TEXT,"
-                "isCompleted INTEGER) ",
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "title STRING, "
+            "note TEXT, "
+            "date STRING, "
+            "startTime STRING, "
+            "imageUrls TEXT, "
+            "imageUrl TEXT, "
+            "todo TEXT, "
+            "repeat STRING, "
+            "isCompleted INTEGER)",
           );
+        },
+        onUpgrade: (db, oldVersion, newVersion) {
+          if (oldVersion < 3) {
+            // Perform migration here
+            db.execute("ALTER TABLE $_tableName ADD COLUMN imageUrls TEXT");
+          }
         },
       );
     } catch (e) {

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
 import '../main.dart';
 import '../models/task.dart';
 import '../ui/notify_page.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class NotifyHelper {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -40,6 +42,7 @@ class NotifyHelper {
   }
 
   Future<void> selectNotification(String? payload) async {
+    final String note = payload!.split('|')[0];
     if (payload != null) {
       print('Notification payload: $payload');
 

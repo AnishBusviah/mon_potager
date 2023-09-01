@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'Colours.dart';
-
 class Button extends StatelessWidget {
   final String label;
   final Function()? onTap;
@@ -18,7 +16,7 @@ class Button extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Color.fromRGBO(183, 204, 173, 1),
+          color: Color.fromRGBO(123, 214, 208, 98),
         ),
         child: Text(
           label,

@@ -367,13 +367,18 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
                         : Stack(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 75),
-                                child: Image.network(
-                                  'https://openweathermap.org/img/wn/' +
-                                      icon +
-                                      '@4x.png',
+                                padding: const EdgeInsets.only(left: 75-5),
+                                child: SizedBox(
+                                  // height: 200,
                                   width: 160,
-                                  height: 160,
+                                  child: Image.network(
+                                    'https://openweathermap.org/img/wn/' +
+                                        icon +
+                                        '@4x.png',
+                                    fit: BoxFit.fitWidth,
+                                    // width: 160,
+                                    // height: 160,
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -384,13 +389,19 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
                                   children: [
                                     Text(
                                       "$temperature\u2103",
-                                      style: TextStyle(fontSize: 44),
+                                      style: TextStyle(fontSize: 35),
                                     ),
-                                    Text(
-                                      weather,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
+                                    SizedBox(
+                                      width: 75,
+                                      child: Text(
+                                        weather,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -1724,10 +1724,10 @@ class _HomeState extends State<Home> {
                     // ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 300+70),
-                  child: WeatherInfo2(),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 300+70),
+                //   child: WeatherInfo2(),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 500),
                   child: WhatCanIGrow(),

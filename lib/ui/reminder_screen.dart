@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../controllers/task_controller.dart';
-import 'package:mon_potager/main.dart';
-import 'package:mon_potager/ui/add_task_bar.dart';
-
-import 'package:mon_potager/ui/widgets/task_tile.dart';
-import 'package:mon_potager/ui/task_type.dart';
+import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/ui/textstyle.dart';
-import 'package:mon_potager/ui/widgets/button.dart';
+import 'package:mon_potager/ui/widgets/task_tile.dart';
+
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
+import '../controllers/task_controller.dart';
 import '../models/task.dart';
-import 'package:mon_potager/services/notification_services.dart';
+
+import '../services/notification_services.dart';
+import 'add_task_bar.dart';
+import 'widgets/button.dart';
 
 class ReminderScreen extends StatefulWidget {
   const ReminderScreen({super.key});
@@ -25,23 +25,34 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  //Colours
-  Color darkGreen = Color.fromRGBO(64, 97, 80, 1);
-
+  NotifyHelper notifyHelper = NotifyHelper();
   DateTime _selectedDate = DateTime.now();
   final _taskController = Get.put(TaskController());
+
   @override
   void initState() {
     super.initState();
+    notifyHelper.initializeNotification();
+    notifyHelper = NotifyHelper();
+    notifyHelper.requestIOSPermissions();
+  }
+
+  Future<void> initializeNotifications() async {
+    await notifyHelper.initializeNotification();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: ()async {
-        await Get.to(() => const AddTaskPage());
-        _taskController.getTask();
-      }, child: Icon(Icons.add)),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Get.to(() => const AddTaskPage());
+          _taskController.getTask();
+        },
+        child: Icon(Icons.add),
+        backgroundColor: solidGreen,
+      ),
       appBar: _appbar(),
       body: Column(
         children: [
@@ -57,9 +68,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }
 
   _showTasks() {
+    print(_taskController.taskList);
     return Expanded(
       child: Obx(
-            () {
+        () {
           final taskList = _taskController.taskList;
           if (taskList.isEmpty) {
             return const Center(
@@ -76,12 +88,42 @@ class _ReminderScreenState extends State<ReminderScreen> {
             itemBuilder: (context, index) {
               Task task = _taskController.taskList[index];
               print(task.toJson());
-              if (task.repeat == 'Daily' ||
-                  task.repeat == 'Weekly' ||
-                  task.repeat == 'Monthly') {
-                DateTime date =
-                DateFormat.jm().parse(task.startTime.toString());
+              // if (task.repeat == 'Daily' ||
+              //     task.repeat == 'Weekly' ||
+              //     task.repeat == 'Monthly') {
+              //   DateTime date =
+              //       DateFormat.jm().parse(task.startTime.toString());
+              //
+              //   var myTime = DateFormat("HH:mm").format(date);
+              //   notifyHelper.scheduledNotification(
+              //       date.hour, date.minute, task);
+              //   var selectedTaskType;
+              //   return AnimationConfiguration.staggeredList(
+              //     position: index,
+              //     child: SlideAnimation(
+              //       child: FadeInAnimation(
+              //         child: Row(
+              //           children: [
+              //             GestureDetector(
+              //                 onTap: () {
+              //                   _showBottomSheet(context, task);
+              //                 },
+              //                 child: TaskTile(
+              //                   task: task,
+              //                   selectedTaskType: selectedTaskType,
+              //                   selectedImageIndex1: 1,
+              //                   selectedImageIndex2: 2,
+              //                   selectedImageIndex0: 0,
+              //                 )),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   );
+              // }
+              if (task.date == DateFormat.yMd().format(_selectedDate)) {
 
+                var selectedTaskType;
                 return AnimationConfiguration.staggeredList(
                   position: index,
                   child: SlideAnimation(
@@ -94,34 +136,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               },
                               child: TaskTile(
                                 task: task,
-                                selectedTaskType: null,
+                                selectedTaskType: selectedTaskType,
+                                todo: task.todo,
+                                // selectedImageIndex1: 1,
+                                // selectedImageIndex2: 2,
+                                // selectedImageIndex0: 0,
                               )),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (task.date == DateFormat.yMd().format(_selectedDate)) {
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                    child: FadeInAnimation(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                                onTap: () {
-                                  _showBottomSheet(context, task);
-                                },
-                                child: Container(
-                                    width:
-                                    100, // Specify your desired width here
-                                    child: TaskTile(
-                                      task: task,
-                                      selectedTaskType: null,
-                                    ))),
-                          ),
                         ],
                       ),
                     ),
@@ -169,14 +189,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
             task.isCompleted == 1
                 ? Container()
                 : _bottomSheetbutton(
-              label: "Task Completed",
-              onTap: () {
-                _taskController.markTaskCompleted(task.id!);
-                Get.back();
-              },
-              color: Color.fromRGBO(93, 215, 173, 0.493),
-              context: context,
-            ),
+                    label: "Task Completed",
+                    onTap: () {
+                      _taskController.markTaskCompleted(task.id!);
+                      Get.back();
+                    },
+                    color: Color.fromRGBO(93, 215, 173, 0.493),
+                    context: context,
+                  ),
             _bottomSheetbutton(
               label: "Delete Task",
               onTap: () {
@@ -229,7 +249,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     : color),
             borderRadius: BorderRadius.circular(20),
             color:
-            isClose == true ? Color.fromRGBO(250, 251, 251, 0.493) : color,
+                isClose == true ? Color.fromRGBO(250, 251, 251, 0.493) : color,
           ),
           child: Center(
             child: Text(label,
@@ -248,8 +268,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
         height: 100,
         width: 80,
         initialSelectedDate: DateTime.now(),
-        //Date Selection
-        selectionColor: const Color.fromRGBO(64, 97, 80, 98),
+        selectionColor:pageTitleColour,
         selectedTextColor: Colors.white,
         dateTextStyle: GoogleFonts.lato(
           textStyle: const TextStyle(
@@ -307,6 +326,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   _appbar() {
     return AppBar(
+      automaticallyImplyLeading: false,
       title: const Text('Reminder',
           style: TextStyle(color: Colors.black, fontSize: 25)),
       centerTitle: true,
@@ -334,6 +354,18 @@ class _ReminderScreenState extends State<ReminderScreen> {
       ],
       backgroundColor: Color.fromRGBO(129, 164, 131, 1),
       toolbarHeight: 100,
-    );
+      leading: GestureDetector(
+        onTap: () {
+          notifyHelper.displayNotification(
+            title: "Notification",
+            body: "Need to complete task!",
+          );
+//notifyHelper.scheduledNotification();
+        },
+        // child: const Icon(
+        //   Icons.arrow_back_ios,
+        //   color: Colors.black,
+        ),
+      );
   }
 }

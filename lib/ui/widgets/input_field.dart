@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../textstyle.dart';
 
 
@@ -9,10 +10,10 @@ class MyInputField extends StatelessWidget {
   final Widget? widget;
   const MyInputField(
       {Key? key,
-        required this.title,
-        required this.hint,
-        required this.controller,
-        required this.widget})
+      required this.title,
+      required this.hint,
+      required this.controller,
+      required this.widget})
       : super(key: key);
 
   @override

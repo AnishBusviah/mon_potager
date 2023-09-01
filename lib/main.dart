@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mon_potager/services/notification_services.dart';
 
@@ -19,6 +20,7 @@ import '../services/notification_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'db/db_helper.dart';
+import 'models/Colours.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -33,6 +35,25 @@ Future<void> main() async {
   await GetStorage.init();
   NotifyHelper().initializeNotification();
   tz.initializeTimeZones();
+  // AwesomeNotifications().initialize(
+  //     null,
+  //     [
+  //       NotificationChannel(
+  //           channelKey: 'basic_channel',
+  //           channelName: 'Basic Notifications',
+  //           channelDescription: "Description",
+  //           defaultColor: pageTitleColour,
+  //           importance: NotificationImportance.High,
+  //           channelShowBadge: true)
+  //     ],
+  //     debug: true);
+  //
+  // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+  //   if (!isAllowed) {
+  //     AwesomeNotifications().requestPermissionToSendNotifications();
+  //   }
+  // });
+
 
   runApp(const GetMaterialApp(
     debugShowCheckedModeBanner: false,

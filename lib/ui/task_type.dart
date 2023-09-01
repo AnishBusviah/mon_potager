@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 
 class TaskType {
   String name;
-  Image image;
+  final Image image;
   bool isChoose;
-  TaskType(
-      this.name,
-      this.image,
-      this.isChoose,
-      );
-
-  get icon => null;
+  final int imageIndex;
+  TaskType(this.name, this.image, this.isChoose, this.imageIndex);
 }

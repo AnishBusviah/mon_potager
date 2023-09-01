@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mon_potager/controllers/task_controller.dart';
-import 'package:mon_potager/models/task.dart';
 import 'package:mon_potager/ui/task_type.dart';
+import 'package:mon_potager/ui/task_type_card.dart';
 import 'package:mon_potager/ui/textstyle.dart';
 import 'package:mon_potager/ui/widgets/create_task.dart';
 import 'package:mon_potager/ui/widgets/input_field.dart';
-import 'package:mon_potager/ui/task_type_card.dart';
+
 import 'package:sqflite/sqflite.dart';
 
+import '../controllers/task_controller.dart';
+import '../models/task.dart';
+
 class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({Key? key}) : super(key: key);
+  final TaskType? selectedTaskType;
+
+  const AddTaskPage({Key? key, this.selectedTaskType}) : super(key: key);
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -19,39 +23,56 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final TaskController _taskController = Get.put(TaskController());
-  final TextEditingController _titleController = TextEditingController();
 
+  final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
+
+  final fertiliserIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
+  final waterIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
+  final pruningIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
+
+
   final List<TaskType> taskTypes = [
     TaskType(
         "Fertilser",
         Image.network(
-            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0"),
-        false),
+            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0"),
+        false,
+        0),
     TaskType(
         "Water",
         Image.network(
-            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0"),
-        false),
-    TaskType(
-        "Sunlight",
-        Image.network(
-            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_sunlight_title@2x.png?x-oss-process=image/format,webp/resize,s_25&v=1.0"),
-        false),
+            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0"),
+        false,
+        1),
     TaskType(
         "Pruning",
         Image.network(
-            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_28&v=1.0"),
-        false),
+            "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0"),
+        false,
+        2),
   ];
   TaskType? selectedTaskType;
-
+  int _selectedRemind = 5;
+  List<int> remindList = [
+    5,
+    10,
+    15,
+    20,
+  ];
+  String _selectedRepeat = "None";
+  List<String> repeatList = [
+    "None",
+    "Daily",
+    "Weekly",
+    "Monthly",
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(context),
+      appBar: _appbar(context, selectedTaskType),
       body: Container(
         padding: const EdgeInsets.only(
           left: 20,
@@ -82,7 +103,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 child: ListView(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  children: <Widget>[
+                  children:
+                  // [Container(child: Column(children: [Image.network(fertiliserIcon), Text("Fertiliser")],),)]
+                  <Widget>[
                     ...taskTypes
                         .map((type) => TaskTypeCard(type, taskTypeClick))
                   ],
@@ -90,8 +113,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               MyInputField(
                 title: "Description",
-                hint: "Enter your title",
-                controller: _titleController,
+                hint: "Enter your note",
+                controller: _noteController,
                 widget: null,
               ),
               MyInputField(
@@ -124,14 +147,42 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ),
                 ],
               ),
+              MyInputField(
+                title: "Repeat",
+                hint: "$_selectedRepeat",
+                controller: null,
+                widget: DropdownButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Color.fromARGB(255, 173, 236, 180),
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyles,
+                  underline: Container(
+                    height: 0,
+                  ),
+                  items: repeatList.map<DropdownMenuItem<String>>(
+                    (String? value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child:
+                            Text(value!, style: TextStyle(color: Colors.grey)),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (String? newvalue) {
+                    setState(() {
+                      _selectedRepeat = newvalue!;
+                    });
+                  },
+                ),
+              ),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CreateTask(
-                    label: "Create Task",
-                    onTap: () {_creatTask();},
-                    // onTap: () => _validateDate()
-                  )
+                  CreateTask(label: "Create Task", onTap: () => _validateDate())
                 ],
               ),
             ],
@@ -142,32 +193,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _validateDate() {
-    if (_titleController.text.isNotEmpty) {
-      _addTaskToDb();
-      Get.back();
-    } else if (_titleController.text.isEmpty) {
-      Get.snackbar("Required", "All fields are required!",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.white,
-          icon: const Icon(
-            Icons.warning_amber_outlined,
-            color: Colors.red,
-          ));
-    }
-  }
-
-  _creatTask() {
+    print(taskTypes[
+    taskTypes.indexWhere((element) => element.isChoose == true)]
+        .name);
     _addTaskToDb();
     Get.back();
   }
 
   _addTaskToDb() async {
     try {
+
       int value = await _taskController.addTask(
         task: Task(
-          title: _titleController.text,
+          note: _noteController.text,
           date: DateFormat.yMd().format(_selectedDate),
           startTime: _startTime,
+          todo: taskTypes[
+                  taskTypes.indexWhere((element) => element.isChoose == true)]
+              .name,
+          repeat: _selectedRepeat,
           isCompleted: 0,
         ),
       );
@@ -177,7 +221,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  _appbar(BuildContext context) {
+  _appbar(BuildContext context, TaskType? selectedTaskType) {
     return AppBar(
       title: const Text('Task',
           style: TextStyle(color: Colors.black, fontSize: 25)),
@@ -199,7 +243,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
         ),
       ),
-      backgroundColor: const Color.fromARGB(255, 26, 142, 136),
+      backgroundColor: const Color.fromRGBO(129, 164, 131, 1),
       toolbarHeight: 100,
       leading: GestureDetector(
         onTap: () {
@@ -244,26 +288,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _showTimePicker() {
+    TimeOfDay currentTime = TimeOfDay.now();
+
     return showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context,
-      initialTime: TimeOfDay(
-        hour: int.parse(_startTime.split(":")[0]),
-        minute: int.parse(_startTime.split(":")[1].split("")[0]),
-      ),
+      initialTime: currentTime,
     );
   }
 
   void taskTypeClick(TaskType task) {
     setState(() {
-      if (selectedTaskType == task) {
-        selectedTaskType = null;
-      } else {
-        selectedTaskType = task;
-      }
-
       taskTypes.forEach((taskType) => taskType.isChoose = false);
-      taskTypes[taskTypes.indexOf(task)].isChoose = true;
+      task.isChoose = true;
+      selectedTaskType = task;
+      print("Selected index in TaskTile: ${task.imageIndex}");
     });
   }
 }
