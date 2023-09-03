@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/ui/task_type.dart';
 import 'package:mon_potager/ui/task_type_card.dart';
 import 'package:mon_potager/ui/textstyle.dart';
@@ -11,6 +12,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../controllers/task_controller.dart';
 import '../models/task.dart';
+import '../services/awesome_notification_service.dart';
 
 class AddTaskPage extends StatefulWidget {
   final TaskType? selectedTaskType;
@@ -27,12 +29,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
-  String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
+  String _startTime = DateFormat("HH:mm").format(DateTime.now()).toString();
 
-  final fertiliserIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
-  final waterIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
-  final pruningIcon = "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
-
+  final fertiliserIcon =
+      "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_fertilizer_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
+  final waterIcon =
+      "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_water_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
+  final pruningIcon =
+      "https://www.picturethisai.com/image-handle/website_cmsname/static/name/c383e7e8de0fce33a82f35fab1a0cb12/img/default_v2/icons/pc/care_images/icon_pruning_title@2x.png?x-oss-process=image/format,webp/resize,s_50&v=1.0";
 
   final List<TaskType> taskTypes = [
     TaskType(
@@ -69,6 +73,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     "Weekly",
     "Monthly",
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,8 +109,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   children:
-                  // [Container(child: Column(children: [Image.network(fertiliserIcon), Text("Fertiliser")],),)]
-                  <Widget>[
+                      // [Container(child: Column(children: [Image.network(fertiliserIcon), Text("Fertiliser")],),)]
+                      <Widget>[
                     ...taskTypes
                         .map((type) => TaskTypeCard(type, taskTypeClick))
                   ],
@@ -192,17 +197,43 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  _validateDate() {
-    print(taskTypes[
-    taskTypes.indexWhere((element) => element.isChoose == true)]
-        .name);
+  _validateDate() async {
+    var title =  taskTypes[taskTypes.indexWhere((element) => element.isChoose == true)].name;
+
+    var body = _noteController.text;
+
+    // await NotificationService.showNotification(
+    //   title: "Tile of Notif",
+    //   body: "Body of Notif",
+    // );
+
+    int year = int.parse(DateFormat.y().format(_selectedDate));
+    int month = int.parse(DateFormat.M().format(_selectedDate));
+    int day = int.parse(DateFormat.d().format(_selectedDate));
+
+    DateTime time = DateFormat.Hm().parse(_startTime);
+    int hour = time.hour;
+    int minute = time.minute;
+    // print("hi${time.hour}",);
+
+    await NotificationService.scheduleNotification(
+        title: title,
+      body: body,
+      day: day,
+      month: month,
+      year: year,
+      hour: hour,
+      minute: minute
+
+
+    );
+
     _addTaskToDb();
     Get.back();
   }
 
   _addTaskToDb() async {
     try {
-
       int value = await _taskController.addTask(
         task: Task(
           note: _noteController.text,
@@ -259,6 +290,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _getDate() async {
     DateTime? _pickerDate = await showDatePicker(
+
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2018),
@@ -290,10 +322,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _showTimePicker() {
     TimeOfDay currentTime = TimeOfDay.now();
 
-    return showTimePicker(
+    return
+      showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context,
       initialTime: currentTime,
+
     );
   }
 

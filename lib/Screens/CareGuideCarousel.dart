@@ -2,10 +2,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../models/CareCards.dart';
+import '../models/PlantAssessmentResults.dart';
 import 'CareDetails.dart';
 
 class CareGuideCarousel extends StatefulWidget {
-  const CareGuideCarousel({Key? key}) : super(key: key);
+
+  CareGuideCarousel({Key? key}) : super(key: key);
 
   @override
   _CareGuideCarouselState createState() => _CareGuideCarouselState();

@@ -12,7 +12,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../controllers/task_controller.dart';
 import '../models/task.dart';
 
-import '../services/notification_services.dart';
+
 import 'add_task_bar.dart';
 import 'widgets/button.dart';
 
@@ -25,33 +25,34 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  NotifyHelper notifyHelper = NotifyHelper();
+
   DateTime _selectedDate = DateTime.now();
   final _taskController = Get.put(TaskController());
 
   @override
   void initState() {
     super.initState();
-    notifyHelper.initializeNotification();
-    notifyHelper = NotifyHelper();
-    notifyHelper.requestIOSPermissions();
+
   }
 
-  Future<void> initializeNotifications() async {
-    await notifyHelper.initializeNotification();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Get.to(() => const AddTaskPage());
-          _taskController.getTask();
-        },
-        child: Icon(Icons.add),
-        backgroundColor: solidGreen,
+      floatingActionButton: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
+        child: FloatingActionButton(
+          shape: CircleBorder(),
+            
+          onPressed: () async {
+            await Get.to(() => const AddTaskPage());
+            _taskController.getTask();
+          },
+          child: Icon(Icons.add),
+          backgroundColor: solidGreen,
+        ),
       ),
       appBar: _appbar(),
       body: Column(
@@ -92,11 +93,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
               //     task.repeat == 'Weekly' ||
               //     task.repeat == 'Monthly') {
               //   DateTime date =
-              //       DateFormat.jm().parse(task.startTime.toString());
+              //       DateFormat.Hm().parse(task.startTime.toString());
               //
               //   var myTime = DateFormat("HH:mm").format(date);
               //   notifyHelper.scheduledNotification(
-              //       date.hour, date.minute, task);
+              //       11, 09, task);
               //   var selectedTaskType;
               //   return AnimationConfiguration.staggeredList(
               //     position: index,
@@ -111,9 +112,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
               //                 child: TaskTile(
               //                   task: task,
               //                   selectedTaskType: selectedTaskType,
-              //                   selectedImageIndex1: 1,
-              //                   selectedImageIndex2: 2,
-              //                   selectedImageIndex0: 0,
+              //                   todo: task.todo,
+              //                   // selectedImageIndex1: 1,
+              //                   // selectedImageIndex2: 2,
+              //                   // selectedImageIndex0: 0,
               //                 )),
               //           ],
               //         ),
@@ -356,10 +358,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       toolbarHeight: 100,
       leading: GestureDetector(
         onTap: () {
-          notifyHelper.displayNotification(
-            title: "Notification",
-            body: "Need to complete task!",
-          );
+
 //notifyHelper.scheduledNotification();
         },
         // child: const Icon(

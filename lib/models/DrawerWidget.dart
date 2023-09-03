@@ -22,26 +22,28 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           height: MediaQuery.of(context).size.height,
           child: ListView(
             children: [
-              DrawerHeader(
-                  decoration: BoxDecoration(color: iconColour),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: 80,
-                        // child: Image.asset("assets/monPotagerLogo.png")
-                        child: Image.asset("assets/connoisseur.png"),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Mon Potager",
-                            style: TextStyle(fontSize: 20),
-                          ), Text("Your virtual plant connoisseur", style: TextStyle(fontSize: 12),)
-                        ],
-                      ),
-                    ],
-                  )),
+              SizedBox(
+                child: DrawerHeader(
+                    decoration: BoxDecoration(color: iconColour),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: 78,
+                          // child: Image.asset("assets/monPotagerLogo.png")
+                          child: Image.asset("assets/connoisseur.png"),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Mon Potager",
+                              style: TextStyle(fontSize: 20),
+                            ), Text("Your virtual plant connoisseur", style: TextStyle(fontSize: 12),)
+                          ],
+                        ),
+                      ],
+                    )),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: SizedBox(

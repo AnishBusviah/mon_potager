@@ -182,8 +182,13 @@ class _SceneState extends State<Scene> {
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
         height: 60,
+        padding: EdgeInsets.all(0),
+        
         child: Container(
+          height: 50,
+          // color: Colors.blue,
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               MaterialButton(
@@ -222,13 +227,10 @@ class _SceneState extends State<Scene> {
               // ),
               MaterialButton(
                 // color: Colors.red,
+                // minWidth: 10,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // ImageIcon(
-                    //   AssetImage('assets/icons/icons8-garden-50.png'),
-                    //   color: _icon[1],
-                    // ),
                     Icon(
                       Icons.lightbulb,
                       color: _icon[1],
@@ -236,7 +238,7 @@ class _SceneState extends State<Scene> {
                     Text(
                       "Tips",
                       style: TextStyle(color: _icon[1]),
-                    )
+                    ),
                   ],
                 ),
                 onPressed: () {
@@ -1724,10 +1726,10 @@ class _HomeState extends State<Home> {
                     // ),
                   ],
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 300+70),
-                //   child: WeatherInfo2(),
-                // ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 300+70),
+                  child: WeatherInfo2(),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 500),
                   child: WhatCanIGrow(),

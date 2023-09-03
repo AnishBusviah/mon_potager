@@ -186,12 +186,13 @@ class _plantPage3State extends State<plantPage3> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(241, 236, 238, 1),
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         // iconTheme: IconThemeData(color: pageTitleColour),
         // backgroundColor: Colors.transparent,
         backgroundColor: Color.fromARGB(168, 36, 139, 88),
         elevation: 0,
         title: Text(
-          "Plant Details",
+          "Plant Details", style: TextStyle(color: Colors.white),
           // style: TextStyle(color: pageTitleColour),
         ),
       ),
@@ -237,7 +238,7 @@ class _plantPage3State extends State<plantPage3> {
                         child: plantDetails.waterDetails == "Loading Data..."
                             ? null
                             : SizedBox(
-                          height: 51,
+                          height: 51+4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -283,7 +284,7 @@ class _plantPage3State extends State<plantPage3> {
                           opensunDialog();
                         },
                         child: SizedBox(
-                          height: 51,
+                          height: 51+4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -327,7 +328,7 @@ class _plantPage3State extends State<plantPage3> {
                           openFertiliserDialog();
                         },
                         child: SizedBox(
-                          height: 51,
+                          height: 51+4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment
                                 .start, // Align the text to the left
@@ -373,7 +374,7 @@ class _plantPage3State extends State<plantPage3> {
                           openPruningDialog();
                         },
                         child: SizedBox(
-                          height: 51,
+                          height: 51+4,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment
                                 .start, // Align the text to the left
@@ -560,7 +561,7 @@ class _plantPage3State extends State<plantPage3> {
 
                         Navigator.push(context, MaterialPageRoute(builder: (context) => MyGarden(),));
                       },
-                      child: Text("Add to Garden"),
+                      child: Text("Add to Garden", style: TextStyle(color: Colors.white),),
                       style:
                       ElevatedButton.styleFrom(backgroundColor: solidGreen)),
                 ),

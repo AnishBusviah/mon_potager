@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:mon_potager/services/notification_services.dart';
+import 'package:mon_potager/services/awesome_notification_service.dart';
 
 //importing other dart
 // import 'CameraCode.dart';
@@ -9,32 +9,27 @@ import 'Navigation.dart';
 import 'WeatherWidget.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:get/get.dart';
 import '../db/db_helper.dart';
 import 'package:get_storage/get_storage.dart';
 import '../ui/reminder_screen.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-import '../services/notification_services.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 
 import 'db/db_helper.dart';
 import 'models/Colours.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   InitialiseCamera();
   //GetPermission();
 
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.initializeNotification();
+
   await Firebase.initializeApp();
   await DBHelper.initDb();
   await GetStorage.init();
-  NotifyHelper().initializeNotification();
-  tz.initializeTimeZones();
   // AwesomeNotifications().initialize(
   //     null,
   //     [
@@ -54,12 +49,27 @@ Future<void> main() async {
   //   }
   // });
 
+  runApp(MyApp());
+}
 
-  runApp(const GetMaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Navigation Basics',
-    home: FirstRoute(),
-  ));
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      theme: ThemeData(
+        primaryColor: pageTitleColour,
+          primarySwatch: Colors.red,
+          timePickerTheme: _timePickerTheme),
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Navigation Basics',
+      home: FirstRoute(),
+    );
+  }
 }
 
 // late List<CameraDescription> _cameras;
@@ -273,3 +283,44 @@ Future<void> main() async {
 //     );
 //   }
 // }
+
+final _timePickerTheme = TimePickerThemeData(
+  backgroundColor: Colors.white,
+  dayPeriodColor: pageTitleColour,
+  // hourMinuteShape: const RoundedRectangleBorder(
+  //   borderRadius: BorderRadius.all(Radius.circular(8)),
+  //   side: BorderSide(color: Colors.orange, width: 4),
+  // ),
+  // dayPeriodBorderSide: const BorderSide(color: Colors.orange, width: 4),
+  // dayPeriodColor: Colors.blueGrey.shade600,
+  // shape: const RoundedRectangleBorder(
+  //   borderRadius: BorderRadius.all(Radius.circular(8)),
+  //   side: BorderSide(color: Colors.orange, width: 4),
+  // ),
+  // dayPeriodTextColor: Colors.white,
+  // dayPeriodShape: const RoundedRectangleBorder(
+  //   borderRadius: BorderRadius.all(Radius.circular(8)),
+  //   side: BorderSide(color: Colors.orange, width: 4),
+  // ),
+  // hourMinuteColor: MaterialStateColor.resolveWith((states) =>
+  //     states.contains(MaterialState.selected)
+  //         ? Colors.orange
+  //         : Colors.blueGrey.shade800),
+  // hourMinuteTextColor: MaterialStateColor.resolveWith((states) =>
+  //     states.contains(MaterialState.selected) ? Colors.white : Colors.orange),
+  // dialHandColor: Colors.blueGrey.shade700,
+  // dialBackgroundColor: Colors.blueGrey.shade800,
+  // hourMinuteTextStyle:
+  //     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  // dayPeriodTextStyle:
+  //     const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+  // helpTextStyle: const TextStyle(
+  //     fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+  // inputDecorationTheme: const InputDecorationTheme(
+  //   border: InputBorder.none,
+  //   contentPadding: EdgeInsets.all(0),
+  // ),
+  // dialTextColor: MaterialStateColor.resolveWith((states) =>
+  //     states.contains(MaterialState.selected) ? Colors.orange : Colors.white),
+  // entryModeIconColor: Colors.orange,
+);

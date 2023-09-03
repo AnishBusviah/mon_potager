@@ -21,6 +21,7 @@ class _MyGardenState extends State<MyGarden> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          shape: CircleBorder(),
           onPressed: () {
             Navigator.push(
               context,

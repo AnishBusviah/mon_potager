@@ -367,10 +367,10 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
                         : Stack(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 75-5),
+                                padding: const EdgeInsets.only(left: 75),
                                 child: SizedBox(
                                   // height: 200,
-                                  width: 160,
+                                  width: 160-30,
                                   child: Image.network(
                                     'https://openweathermap.org/img/wn/' +
                                         icon +
@@ -412,7 +412,7 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 190, top: 15-5-2),
+                  padding: const EdgeInsets.only(left: 190, top: 0),
                   child: Row(
                     children: [
                       Padding(
