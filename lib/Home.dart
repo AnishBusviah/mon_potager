@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:mon_potager/search.dart';
 import 'package:mon_potager/ui/reminder_screen.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 import 'package:mon_potager/widgets/WeatherWidget2.dart';
 import 'package:mon_potager/widgets/WhatCanIGrow.dart';
+import 'package:vibration/vibration.dart';
 import 'dart:ui';
 
 import 'Screens/ForYou.dart';
@@ -61,6 +64,16 @@ class _SceneState extends State<Scene> {
   void initState() {
     _icon[0] = _selected;
     super.initState();
+  }
+
+  bool speakHome = false;
+  bool speakTips = false;
+  bool speakTask = false;
+
+  void setFalse(){
+    speakHome = false;
+    speakTips = false;
+    speakTask = false;
   }
 
   @override
@@ -183,289 +196,332 @@ class _SceneState extends State<Scene> {
         notchMargin: 10,
         height: 60,
         padding: EdgeInsets.all(0),
-        
-        child: Container(
-          height: 50,
-          // color: Colors.blue,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MaterialButton(
-                  // color: Colors.blue,
-                  minWidth: 4,
+        child: Listener(
+          onPointerMove: (PointerMoveEvent event) {
+            print("Coord: ${event.position.dx},${event.position.dy}");
+
+            if ((event.position.dx >= 60 && event.position.dx <= 108) &&
+                (event.position.dy >= 754 && event.position.dy <= 782)) {
+              if (!speakHome) {
+                speak("Home");
+                setState(() {
+                  setFalse();
+                  speakHome = true;
+                });
+
+              }
+            }else if ((event.position.dx >= 172 && event.position.dx <= 232) &&
+                (event.position.dy >= 754 && event.position.dy <= 782)) {
+              if (!speakTips) {
+                speak("Gardening Tips");
+                setState(() {
+                  setFalse();
+                  speakTips = true;
+                });
+
+              }
+            }else if ((event.position.dx >= 310 && event.position.dx <= 375) &&
+                (event.position.dy >= 754 && event.position.dy <= 782)) {
+              if (!speakTask) {
+                speak("Manage Tasks");
+                setState(() {
+                  setFalse();
+                  speakTask = true;
+                });
+
+              }
+            }else{
+              setState(() {
+                setFalse();
+              });
+
+            }
+
+
+          },
+          child: Container(
+            height: 50,
+            // color: Colors.blue,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MaterialButton(
+                    // color: Colors.blue,
+                    minWidth: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.home,
+                          color: _icon[0],
+                        ),
+                        Text(
+                          "Home",
+                          style: TextStyle(color: _icon[0]),
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      setState(
+                        () {
+                          _changeScreen(0);
+                        },
+                      );
+                    }),
+                // MaterialButton(
+                //   minWidth: 10,
+                //   // color: Colors.green,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [Icon(CupertinoIcons.search), Text("Search")],
+                //   ),
+                //   onPressed: () {
+                //     showSearch(context: context, delegate: Search());
+                //   },
+                // ),
+                MaterialButton(
+                  // color: Colors.red,
+                  // minWidth: 10,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.home,
-                        color: _icon[0],
+                        Icons.lightbulb,
+                        color: _icon[1],
                       ),
                       Text(
-                        "Home",
-                        style: TextStyle(color: _icon[0]),
+                        "Tips",
+                        style: TextStyle(color: _icon[1]),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    setState(
+                      () {
+                        _changeScreen(1);
+                      },
+                    );
+                  },
+                ),
+                MaterialButton(
+                  minWidth: 10,
+                  // color: Colors.yellowAccent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ImageIcon(
+                          AssetImage('assets/icons/icons8-reminders-50.png'),
+                          color: _icon[2]),
+                      Text(
+                        "Tasks",
+                        style: TextStyle(color: _icon[2]),
                       )
                     ],
                   ),
                   onPressed: () {
                     setState(
                       () {
-                        _changeScreen(0);
+                        _changeScreen(2);
                       },
                     );
-                  }),
-              // MaterialButton(
-              //   minWidth: 10,
-              //   // color: Colors.green,
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [Icon(CupertinoIcons.search), Text("Search")],
-              //   ),
-              //   onPressed: () {
-              //     showSearch(context: context, delegate: Search());
-              //   },
-              // ),
-              MaterialButton(
-                // color: Colors.red,
-                // minWidth: 10,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.lightbulb,
-                      color: _icon[1],
-                    ),
-                    Text(
-                      "Tips",
-                      style: TextStyle(color: _icon[1]),
-                    ),
-                  ],
+                  },
                 ),
-                onPressed: () {
-                  setState(
-                    () {
-                      _changeScreen(1);
-                    },
-                  );
-                },
-              ),
-              MaterialButton(
-                minWidth: 10,
-                // color: Colors.yellowAccent,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ImageIcon(
-                        AssetImage('assets/icons/icons8-reminders-50.png'),
-                        color: _icon[2]),
-                    Text(
-                      "Tasks",
-                      style: TextStyle(color: _icon[2]),
-                    )
-                  ],
-                ),
-                onPressed: () {
-                  setState(
-                    () {
-                      _changeScreen(2);
-                    },
-                  );
-                },
-              ),
-              // MaterialButton(
-              //   // color: Colors.blue,
-              //   minWidth: 10,
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Icon(
-              //         Icons.person,
-              //         color: _icon[3],
-              //       ),
-              //       Text("Profile")
-              //     ],
-              //   ),
-              //   onPressed: () {
-              //     setState(
-              //       () {
-              //         _changeScreen(3);
-              //       },
-              //     );
-              //   },
-              // ),
-            ],
+                // MaterialButton(
+                //   // color: Colors.blue,
+                //   minWidth: 10,
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Icon(
+                //         Icons.person,
+                //         color: _icon[3],
+                //       ),
+                //       Text("Profile")
+                //     ],
+                //   ),
+                //   onPressed: () {
+                //     setState(
+                //       () {
+                //         _changeScreen(3);
+                //       },
+                //     );
+                //   },
+                // ),
+              ],
+            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: <Widget>[
+            //     MaterialButton(
+            //       minWidth: 10,
+            //       onPressed: () {},
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Icon(
+            //             Icons.home,
+            //             color: _icon[0],
+            //           ),
+            //           Text(
+            //             "Home",
+            //             style: TextStyle(color: _icon[0]),
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //     MaterialButton(
+            //       minWidth: 20,
+            //       onPressed: () {},
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           ImageIcon(
+            //             AssetImage('assets/icons/icons8-garden-50.png'),
+            //             color: _icon[1],
+            //           ),
+            //           Text("My Garden",
+            //               style: TextStyle(
+            //                 color: _icon[1],
+            //               )),
+            //         ],
+            //       ),
+            //     ),
+            //     MaterialButton(
+            //       minWidth: 20,
+            //       onPressed: () {},
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Icon(
+            //             Icons.search,
+            //             color: _icon[1],
+            //           ),
+            //           Text(
+            //             "Search",
+            //             style: TextStyle(color: _icon[1]),
+            //           )
+            //         ],
+            //       ),
+            //     ),
+            //     MaterialButton(
+            //       minWidth: 20,
+            //       onPressed: () {},
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           ImageIcon(
+            //               AssetImage('assets/icons/icons8-reminders-50.png'),
+            //               color: _icon[1]),
+            //           Text("Reminders",
+            //               style: TextStyle(
+            //                 color: _icon[1],
+            //               )),
+            //         ],
+            //       ),
+            //     ),
+            //     MaterialButton(
+            //       minWidth: 25,
+            //       onPressed: () {},
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Icon(
+            //             Icons.person,
+            //             color: _icon[2],
+            //           ),
+            //           Text(
+            //             "Profile",
+            //             style: TextStyle(
+            //               color: _icon[2],
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     // Row(
+            //     //   mainAxisAlignment: MainAxisAlignment.center,
+            //     //   children: <Widget>[
+            //     //     MaterialButton(
+            //     //       minWidth: 60,
+            //     //       onPressed: () {
+            //     //         setState(() {
+            //     //           _changeScreen(0);
+            //     //         });
+            //     //       },
+            //     //       child: Column(
+            //     //         mainAxisAlignment: MainAxisAlignment.center,
+            //     //         children: <Widget>[
+            //     //           Icon(Icons.home, color: _icon[0]),
+            //     //           Text("Home", style: TextStyle(color: _icon[0])),
+            //     //         ],
+            //     //       ),
+            //     //     ),
+            //     //     MaterialButton(
+            //     //       minWidth: 40,
+            //     //       onPressed: () {
+            //     //         setState(() {
+            //     //           _changeScreen(1);
+            //     //         });
+            //     //       },
+            //     //       child: Column(
+            //     //         mainAxisAlignment: MainAxisAlignment.center,
+            //     //         children: <Widget>[
+            //     //           ImageIcon(
+            //     //             AssetImage('assets/icons/icons8-garden-50.png'),
+            //     //           color: _icon[1],),
+            //     //           Text("My Garden", style: TextStyle(color: _icon[1],)),
+            //     //         ],
+            //     //       ),
+            //     //     ),
+            //     //   ],
+            //     // ),
+            //     // Column(
+            //     //   mainAxisAlignment: MainAxisAlignment.center,
+            //     //   children: <Widget>[
+            //     //     Icon(Icons.search, color: _icon[1],),
+            //     //     Text("Search", style: TextStyle(color: _icon[1]),)
+            //     //   ],
+            //     // ),
+            //     // Row(
+            //     //   children: <Widget>[
+            //     //     MaterialButton(
+            //     //       minWidth: 40,
+            //     //       onPressed: () {
+            //     //         setState(() {
+            //     //           _changeScreen(2);
+            //     //         });
+            //     //       },
+            //     //       child: Column(
+            //     //         mainAxisAlignment: MainAxisAlignment.center,
+            //     //         children: <Widget>[
+            //     //           ImageIcon(
+            //     //             AssetImage('assets/icons/icons8-reminders-50.png'),
+            //     //           color: _icon[1]),
+            //     //           Text("Reminders", style: TextStyle(color: _icon[1],)),
+            //     //         ],
+            //     //       ),
+            //     //     ),
+            //     //     MaterialButton(
+            //     //       minWidth: 70,
+            //     //       onPressed: () {
+            //     //         setState(() {
+            //     //           _changeScreen(3);
+            //     //         });
+            //     //       },
+            //     //       child: Column(
+            //     //         mainAxisAlignment: MainAxisAlignment.center,
+            //     //         children: <Widget>[
+            //     //           Icon(Icons.person, color: _icon[2],),
+            //     //           Text("Profile", style: TextStyle(color: _icon[2],),),
+            //     //         ],
+            //     //       ),
+            //     //     ),
+            //     //   ],
+            //     // )
+            //   ],
+            // ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: <Widget>[
-          //     MaterialButton(
-          //       minWidth: 10,
-          //       onPressed: () {},
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Icon(
-          //             Icons.home,
-          //             color: _icon[0],
-          //           ),
-          //           Text(
-          //             "Home",
-          //             style: TextStyle(color: _icon[0]),
-          //           )
-          //         ],
-          //       ),
-          //     ),
-          //     MaterialButton(
-          //       minWidth: 20,
-          //       onPressed: () {},
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           ImageIcon(
-          //             AssetImage('assets/icons/icons8-garden-50.png'),
-          //             color: _icon[1],
-          //           ),
-          //           Text("My Garden",
-          //               style: TextStyle(
-          //                 color: _icon[1],
-          //               )),
-          //         ],
-          //       ),
-          //     ),
-          //     MaterialButton(
-          //       minWidth: 20,
-          //       onPressed: () {},
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Icon(
-          //             Icons.search,
-          //             color: _icon[1],
-          //           ),
-          //           Text(
-          //             "Search",
-          //             style: TextStyle(color: _icon[1]),
-          //           )
-          //         ],
-          //       ),
-          //     ),
-          //     MaterialButton(
-          //       minWidth: 20,
-          //       onPressed: () {},
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           ImageIcon(
-          //               AssetImage('assets/icons/icons8-reminders-50.png'),
-          //               color: _icon[1]),
-          //           Text("Reminders",
-          //               style: TextStyle(
-          //                 color: _icon[1],
-          //               )),
-          //         ],
-          //       ),
-          //     ),
-          //     MaterialButton(
-          //       minWidth: 25,
-          //       onPressed: () {},
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Icon(
-          //             Icons.person,
-          //             color: _icon[2],
-          //           ),
-          //           Text(
-          //             "Profile",
-          //             style: TextStyle(
-          //               color: _icon[2],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     // Row(
-          //     //   mainAxisAlignment: MainAxisAlignment.center,
-          //     //   children: <Widget>[
-          //     //     MaterialButton(
-          //     //       minWidth: 60,
-          //     //       onPressed: () {
-          //     //         setState(() {
-          //     //           _changeScreen(0);
-          //     //         });
-          //     //       },
-          //     //       child: Column(
-          //     //         mainAxisAlignment: MainAxisAlignment.center,
-          //     //         children: <Widget>[
-          //     //           Icon(Icons.home, color: _icon[0]),
-          //     //           Text("Home", style: TextStyle(color: _icon[0])),
-          //     //         ],
-          //     //       ),
-          //     //     ),
-          //     //     MaterialButton(
-          //     //       minWidth: 40,
-          //     //       onPressed: () {
-          //     //         setState(() {
-          //     //           _changeScreen(1);
-          //     //         });
-          //     //       },
-          //     //       child: Column(
-          //     //         mainAxisAlignment: MainAxisAlignment.center,
-          //     //         children: <Widget>[
-          //     //           ImageIcon(
-          //     //             AssetImage('assets/icons/icons8-garden-50.png'),
-          //     //           color: _icon[1],),
-          //     //           Text("My Garden", style: TextStyle(color: _icon[1],)),
-          //     //         ],
-          //     //       ),
-          //     //     ),
-          //     //   ],
-          //     // ),
-          //     // Column(
-          //     //   mainAxisAlignment: MainAxisAlignment.center,
-          //     //   children: <Widget>[
-          //     //     Icon(Icons.search, color: _icon[1],),
-          //     //     Text("Search", style: TextStyle(color: _icon[1]),)
-          //     //   ],
-          //     // ),
-          //     // Row(
-          //     //   children: <Widget>[
-          //     //     MaterialButton(
-          //     //       minWidth: 40,
-          //     //       onPressed: () {
-          //     //         setState(() {
-          //     //           _changeScreen(2);
-          //     //         });
-          //     //       },
-          //     //       child: Column(
-          //     //         mainAxisAlignment: MainAxisAlignment.center,
-          //     //         children: <Widget>[
-          //     //           ImageIcon(
-          //     //             AssetImage('assets/icons/icons8-reminders-50.png'),
-          //     //           color: _icon[1]),
-          //     //           Text("Reminders", style: TextStyle(color: _icon[1],)),
-          //     //         ],
-          //     //       ),
-          //     //     ),
-          //     //     MaterialButton(
-          //     //       minWidth: 70,
-          //     //       onPressed: () {
-          //     //         setState(() {
-          //     //           _changeScreen(3);
-          //     //         });
-          //     //       },
-          //     //       child: Column(
-          //     //         mainAxisAlignment: MainAxisAlignment.center,
-          //     //         children: <Widget>[
-          //     //           Icon(Icons.person, color: _icon[2],),
-          //     //           Text("Profile", style: TextStyle(color: _icon[2],),),
-          //     //         ],
-          //     //       ),
-          //     //     ),
-          //     //   ],
-          //     // )
-          //   ],
-          // ),
         ),
       ),
     );
@@ -1390,17 +1446,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final FlutterTts flutterTts = FlutterTts();
   bool spokenDiagnose = false;
   bool spokenIdentify = false;
+  bool spokenGarden = false;
   bool spoken = false;
+  bool speakHome = false;
+  bool speakTips = false;
+  bool speakTask = false;
 
-  void speak(String text) async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setVolume(0.5);
-    await flutterTts.setSpeechRate(0.5);
-    await flutterTts.setPitch(1); // 0.5 to 1.5
-    await flutterTts.speak(text);
+  void setFalse() {
+    spokenDiagnose = false;
+    spokenIdentify = false;
+    spokenGarden = false;
+    spoken = false;
+    speakHome = false;
+    speakTips = false;
+    speakTask = false;
   }
 
   @override
@@ -1414,6 +1475,8 @@ class _HomeState extends State<Home> {
     Color iconColor2 = Color.fromRGBO(212, 233, 214, 1);
     Color iconColor3 = Color.fromRGBO(129, 164, 131, 1);
 
+    Widget weatherWidget = WeatherInfo2();
+
     return Listener(
       onPointerMove: (PointerMoveEvent event) {
         print("Coord: ${event.position.dx},${event.position.dy}");
@@ -1424,9 +1487,12 @@ class _HomeState extends State<Home> {
             setState(() {
               spokenDiagnose = true;
               spokenIdentify = false;
+              spokenGarden = false;
+              announcedWeather = false;
+              speakHome = false;
             });
           }
-        }
+        } else
         if ((event.position.dx >= 174 && event.position.dx <= 222) &&
             (event.position.dy >= 282 && event.position.dy <= 319)) {
           if (!spokenIdentify) {
@@ -1434,8 +1500,73 @@ class _HomeState extends State<Home> {
             setState(() {
               spokenDiagnose = false;
               spokenIdentify = true;
+              spokenGarden = false;
+              announcedWeather = false;
+              speakHome = false;
             });
           }
+        } else
+        if ((event.position.dx >= 332 && event.position.dx <= 352) &&
+            (event.position.dy >= 278 && event.position.dy <= 300)) {
+          if (!spokenGarden) {
+            speak("My Garden");
+            setState(() {
+              spokenDiagnose = false;
+              spokenIdentify = false;
+              spokenGarden = true;
+              announcedWeather = false;
+              speakHome = false;
+            });
+          }
+        } else
+        if ((event.position.dx >= 28 && event.position.dx <= 395) &&
+            (event.position.dy >= 385 && event.position.dy <= 460)) {
+          if (!announcedWeather) {
+            speak("Today's weather is ${currentWeather}. "
+                "The temperature is ${currentTemperature} degrees celcius. "
+                "Humidity is at ${currentHumidity}%. "
+                "The wind is blowing in the direction of ${currentWindDirection} at a speed of ${currentWindSpeed} km/h");
+            setFalse();
+            announcedWeather = true;
+          }
+        }else
+
+        //For Bottom App Bar
+        if ((event.position.dx >= 60 && event.position.dx <= 108) &&
+            (event.position.dy >= 754 && event.position.dy <= 782)) {
+          if (!speakHome) {
+            speak("Home");
+            setState(() {
+              setFalse();
+              speakHome = true;
+            });
+
+          }
+        }else if ((event.position.dx >= 172 && event.position.dx <= 232) &&
+            (event.position.dy >= 754 && event.position.dy <= 782)) {
+          if (!speakTips) {
+            speak("Gardening Tips");
+            setState(() {
+              setFalse();
+              speakTips = true;
+            });
+
+          }
+        }else if ((event.position.dx >= 310 && event.position.dx <= 375) &&
+            (event.position.dy >= 754 && event.position.dy <= 782)) {
+          if (!speakTask) {
+            speak("Manage Tasks");
+            setState(() {
+              setFalse();
+              speakTask = true;
+            });
+
+          }
+        }else{
+          setState(() {
+            setFalse();
+          });
+
         }
       },
       child: SingleChildScrollView(
@@ -1444,24 +1575,28 @@ class _HomeState extends State<Home> {
           children: [
             Stack(
               children: [
-                Container(
-                  //color: Colors.blue,
-                  height: deviceHeight * 0.30,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      // BoxShadow(
-                      //   color: Colors.grey.withOpacity(0.5),
-                      //   spreadRadius: 10,
-                      //   blurRadius: 10,
-                      //   offset: Offset(0, 10), // changes position of shadow
-                      // ),
-                    ],
-                    // borderRadius: BorderRadius.circular(50),
-                    image: DecorationImage(
-                      opacity: .7,
-                      image: AssetImage('assets/appBar_Image.jpg'),
-                      fit: BoxFit.fill,
+                GestureDetector(
+                  onTap: (){Vibration.vibrate(duration: 2000);
+                    print("vibrate");},
+                  child: Container(
+                    //color: Colors.blue,
+                    height: deviceHeight * 0.30,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        // BoxShadow(
+                        //   color: Colors.grey.withOpacity(0.5),
+                        //   spreadRadius: 10,
+                        //   blurRadius: 10,
+                        //   offset: Offset(0, 10), // changes position of shadow
+                        // ),
+                      ],
+                      // borderRadius: BorderRadius.circular(50),
+                      image: DecorationImage(
+                        opacity: .7,
+                        image: AssetImage('assets/appBar_Image.jpg'),
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
@@ -1727,7 +1862,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 300+70),
+                  padding: const EdgeInsets.only(top: 300 + 70),
                   child: WeatherInfo2(),
                 ),
                 Padding(

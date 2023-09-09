@@ -427,7 +427,7 @@ class _plantPage3State extends State<plantPage3> {
                 children: [
                   Container(
                     margin: EdgeInsets.fromLTRB(29, 410, 30, 60),
-                    padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
+                    padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
                     height: MediaQuery
                         .of(context)
                         .size
@@ -466,7 +466,7 @@ class _plantPage3State extends State<plantPage3> {
                               ),
                             ],
                           ),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                         ),
                         RichText(
                           text: TextSpan(
@@ -493,7 +493,7 @@ class _plantPage3State extends State<plantPage3> {
                               ),
                             ],
                           ),
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                         ),
                       ],
                     ),

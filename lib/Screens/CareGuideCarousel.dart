@@ -7,7 +7,9 @@ import 'CareDetails.dart';
 
 class CareGuideCarousel extends StatefulWidget {
 
-  CareGuideCarousel({Key? key}) : super(key: key);
+  CareGuideCarousel({Key? key, required this.plantIndex}) : super(key: key);
+
+  int plantIndex;
 
   @override
   _CareGuideCarouselState createState() => _CareGuideCarouselState();
@@ -81,7 +83,7 @@ class _CareGuideCarouselState extends State<CareGuideCarousel> {
         }
         return Transform.rotate(
           angle: pi * value,
-          child: carouselCard(dataList[index]),
+          child: carouselCard(dataList[widget.plantIndex][index]),
         );
       },
     );

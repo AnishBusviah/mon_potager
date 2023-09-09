@@ -140,7 +140,8 @@ class AddNotePhoto extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(title),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(title, style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),

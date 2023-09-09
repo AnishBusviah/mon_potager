@@ -34,41 +34,45 @@ class _TreatmentGuideCarouselState extends State<TreatmentGuideCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> treatment = widget.diagnosis.diseases[0].diseaseDetails.treatment.biological;
+    Treatment treatment = widget.diagnosis.diseases[0].diseaseDetails.treatment;
+    List<dynamic> biologicalTreatment = treatment.biological;
     return Container(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          child: Column(
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Center(
-                  child: Text("Treatment Guide",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                          fontSize: 30)),
-                ),
-              ),
+      height: 300,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top:10.0),
+            child: Center(
+              child: Text(widget.diagnosis.diseases[0].diseaseDetails.localName,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                      fontSize: 30)),
+            ),
+          ),
+          Column(
+            children: [
               AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: 1.1,
                 child: PageView.builder(
-                    itemCount: treatment.length,
+                    itemCount: biologicalTreatment.length,
                     physics: PageScrollPhysics(),
                     controller: _pageController,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: carouselView(index, treatment),
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: carouselView(index, biologicalTreatment),
                       );
                     }),
-              )
+              ),
             ],
-          ),
-        ));
+          )
+        ],
+      ),
+    );
   }
 
-  Widget carouselView(int index, List<dynamic> treatment) {
+  Widget carouselView(int index, List<dynamic> biologicalTreatment) {
     return AnimatedBuilder(
       animation: _pageController,
       builder: (context, child) {
@@ -80,47 +84,38 @@ class _TreatmentGuideCarouselState extends State<TreatmentGuideCarousel> {
         }
         return Transform.rotate(
           angle: pi * value,
-          child: carouselCard(treatment[index], index),
+          child: carouselCard(biologicalTreatment[index], index),
         );
       },
     );
   }
 
-  Widget carouselCard(String treatment, int index) {
+  Widget carouselCard(String biologicalTreatment, int index) {
     return Column(
       children: <Widget>[
-        // Expanded(
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(20.0),
-        //     child: Hero(
-        //       tag: data.imageName,
-        //       child: GestureDetector(
-        //         onTap: () {
-        //           Navigator.push(
-        //               context,
-        //               MaterialPageRoute(
-        //                   builder: (context) => DetailsScreen(data: data)));
-        //         },
-        //         child: Container(
-        //           decoration: BoxDecoration(
-        //               color: Colors.white,
-        //               borderRadius: BorderRadius.circular(30),
-        //               image: DecorationImage(
-        //                   image: AssetImage(
-        //                     data.imageName,
-        //                   ),
-        //                   fit: BoxFit.fill),
-        //               boxShadow: const [
-        //                 BoxShadow(
-        //                     offset: Offset(0, 4),
-        //                     blurRadius: 4,
-        //                     color: Colors.black26)
-        //               ]),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              height: 400,
+              width: 150+25,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  image: DecorationImage(
+                      image: AssetImage(
+                        getMatchingImage(biologicalTreatment),
+                      ),
+                      fit: BoxFit.fitHeight),
+                  boxShadow: const [
+                    BoxShadow(
+                        offset: Offset(0, 4),
+                        blurRadius: 4,
+                        color: Colors.black26)
+                  ]),
+            ),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Text(
@@ -134,7 +129,7 @@ class _TreatmentGuideCarouselState extends State<TreatmentGuideCarousel> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            treatment,
+            biologicalTreatment,
             style: const TextStyle(
                 color: Colors.black87,
                 fontSize: 16,
@@ -144,4 +139,25 @@ class _TreatmentGuideCarouselState extends State<TreatmentGuideCarousel> {
       ],
     );
   }
+}
+
+
+String getMatchingImage(String treatment){
+  String fileDirectory = "assets/treatmentGuides/";
+
+  if(treatment.contains("Burn it")){
+    return "${fileDirectory}burn.jpg";
+  }else if(treatment.contains("Remove weeds")){
+    return "${fileDirectory}removeWeeds.jpg";
+  }else if(treatment.contains("neem oil")){
+    return "${fileDirectory}neemOil.png";
+  }else if(treatment.contains("copper-based spray")){
+    return "${fileDirectory}copperBasedSpray.jpg";
+  }else if(treatment.contains("Replant the plant")){
+    return "${fileDirectory}replant.jpg";
+  }else if(treatment.contains("Add manure or compost")){
+    return "${fileDirectory}compost.jpg";
+  }
+
+  return "";
 }

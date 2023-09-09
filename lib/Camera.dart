@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 // My dart files
 import 'ConfirmPicture.dart';
@@ -65,22 +66,21 @@ class CameraAppState extends State<CameraApp> {
     setState(() {
       if (flashState == Icons.flash_off) {
         flashState = Icons.flash_auto;
+        speak("Flash set to Auto");
       } else {
         if (flashState == Icons.flash_auto) {
           flashState = Icons.flash_on;
+          speak("Flash is On");
         } else {
           flashState = Icons.flash_off;
+          speak("Flash is off");
         }
       }
     });
   } //Handling Flash State
 
-
-
   // Selecting Image from Phone
   Future<void> pickImage() async {
-
-
     var picker;
     picker = ImagePicker();
     var imageFile = null;
@@ -89,8 +89,6 @@ class CameraAppState extends State<CameraApp> {
     var image = null;
     image = File(imageFile!.path);
 
-
-
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -98,6 +96,43 @@ class CameraAppState extends State<CameraApp> {
       ),
     );
   } //pickImage
+
+  bool spokenGallery = false;
+  bool spokenFlash = false;
+  bool spokenShutter = false;
+
+  Offset? _focusPoint;
+
+  void setFalse() {
+    spokenFlash = false;
+    spokenGallery = false;
+    spokenShutter = false;
+  }
+
+
+  Future<void> _setFocusPoint(Offset point) async{
+    if(controller != null && controller.value.isInitialized){
+
+      try{
+        final double x = point.dx.clamp(0.0, 1.0);
+        final double y = point.dy.clamp(0.0, 1.0);
+        await controller.setFocusPoint(Offset(x, y));
+        await controller.setFocusMode(FocusMode.auto);
+        setState(() {
+          _focusPoint = Offset(x, y);
+        });
+
+        //Reset focus point after a short delay to remove the square
+        await Future.delayed(Duration(seconds: 2));
+        setState(() {
+          _focusPoint = null;
+        });
+      }catch (e){
+        
+        print("Failed to set focus: $e");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +155,28 @@ class CameraAppState extends State<CameraApp> {
 
     return Scaffold(
       extendBody: true,
-      body: Stack(children: [
-        CameraPreview(controller),
-        Padding(
+      body: Stack(children:<Widget> [
+        GestureDetector(onTapDown: (TapDownDetails details){
+          // speak("hi");
+          final Offset tapPosition = details.localPosition;
+          final Offset relativeTapPosition = Offset(
+            tapPosition.dx/MediaQuery.of(context).size.width,
+            tapPosition.dy/ (MediaQuery.of(context).size.width * controller.value.aspectRatio),
+          );
+
+          _setFocusPoint(relativeTapPosition);
+        } ,child: CameraPreview(controller)),
+
+        GestureDetector(onTapDown: (TapDownDetails details){
+          // speak("//hi");
+          final Offset tapPosition = details.localPosition;
+          final Offset relativeTapPosition = Offset(
+            tapPosition.dx/MediaQuery.of(context).size.width,
+            tapPosition.dy/ (MediaQuery.of(context).size.width * controller.value.aspectRatio),
+          );
+
+          _setFocusPoint(relativeTapPosition);
+        } ,child: Padding(
           padding: const EdgeInsets.only(bottom: 150.0),
           child: Center(
             child: Container(
@@ -134,90 +188,144 @@ class CameraAppState extends State<CameraApp> {
               ),
             ),
           ),
-        ),
+        ),),
+
+
+
+        if(_focusPoint != null)
+          Positioned.fill(top:50, child: Align(alignment: Alignment(_focusPoint!.dx * 2 -1, _focusPoint!.dy * 2 -1,),
+          child: Container(
+            height: 80,
+              width: 80,
+            decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
+          ),),)
+
       ]),
       bottomNavigationBar: BottomAppBar(
         height: MediaQuery.of(context).size.height * 1 / 5,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              height: 100,
-              width: 100,
-              child: IconButton(
-                onPressed: () {
-                  pickImage();
-                },
-                icon: Icon(
-                  Icons.image,
-                  size: 32,
+        child: Listener(
+          onPointerMove: (PointerMoveEvent event) {
+            print("${event.position.dx}, ${event.position.dy}");
+            if ((event.position.dx >= 80 && event.position.dx <= 100) &&
+                (event.position.dy >= 710 && event.position.dy <= 712)) {
+              if (!spokenGallery) {
+                speak("Click to Open gallery");
+                setState(() {
+                  setFalse();
+                  spokenGallery = true;
+                });
+              }
+            } else if ((event.position.dx >= 170 && event.position.dx <= 249) &&
+                (event.position.dy >= 679 && event.position.dy <= 767)) {
+              if (!spokenShutter) {
+                speak("Click to take picture");
+                setState(() {
+                  setFalse();
+                  spokenShutter = true;
+                });
+              }
+            } else if ((event.position.dx >= 302 && event.position.dx <= 372) &&
+                (event.position.dy >= 712 && event.position.dy <= 753)) {
+              if (!spokenFlash) {
+                speak("Click to change flash state");
+                setState(() {
+                  setFalse();
+                  spokenFlash = true;
+                });
+              }
+            } else {
+              setState(() {
+                setFalse();
+              });
+            }
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                child: IconButton(
+                  onPressed: () {
+                    pickImage();
+                  },
+                  icon: Icon(
+                    Icons.image,
+                    size: 32,
+                  ),
                 ),
+                //color: Colors.red,
               ),
-              //color: Colors.red,
-            ),
-            Container(
-              height: 100,
-              width: 100,
-              //color: Colors.blue,
-              child: IconButton(
-                onPressed: () async {
-
-                  if (!controller.value.isInitialized){
-                    return null;
-                  }
-
-                  if (controller.value.isTakingPicture){
-                    return null;
-                  }
-
-                  try {
-                    if (flashState == Icons.flash_off) {
-                      controller.setFlashMode(FlashMode.off);
-                    } else {
-                      if (flashState == Icons.flash_auto) {
-                        controller.setFlashMode(FlashMode.auto);
-                      } else {
-                        controller.setFlashMode(FlashMode.always);
-                      }
+              Container(
+                height: 100,
+                width: 100,
+                //color: Colors.blue,
+                child: IconButton(
+                  onPressed: () async {
+                    speak("Picture Taken");
+                    if (!controller.value.isInitialized) {
+                      return null;
                     }
-                    //await controller.setFlashMode(FlashMode.auto);
-                    XFile picture = await controller.takePicture();
-                    var image = File(picture.path);
-                    print(image);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => displayPicture(image, "camera", widget.title),
-                      ),
-                    );
-                  } on CameraException catch (e){
-                    debugPrint("Error while taking picture : $e");
-                    return null;
-                  }
 
-                },
-                icon: Icon(
-                  Icons.circle_outlined,
-                  size: 84,
+                    if (controller.value.isTakingPicture) {
+                      return null;
+                    }
+
+                    try {
+                      if (flashState == Icons.flash_off) {
+                        controller.setFlashMode(FlashMode.off);
+                        // speak("Flash Off");
+                        // print("speak(Flash Off);");
+                      } else {
+                        if (flashState == Icons.flash_auto) {
+                          controller.setFlashMode(FlashMode.auto);
+                          // speak("Flash set to Auto");
+                          // print("speak(Flash set to Auto);");
+                        } else {
+                          controller.setFlashMode(FlashMode.always);
+                          // speak("Flash On");
+                          // print("speak(Flash On);");
+                        }
+                      }
+                      //await controller.setFlashMode(FlashMode.auto);
+                      XFile picture = await controller.takePicture();
+                      var image = File(picture.path);
+                      print(image);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              displayPicture(image, "camera", widget.title),
+                        ),
+                      );
+                    } on CameraException catch (e) {
+                      debugPrint("Error while taking picture : $e");
+                      return null;
+                    }
+                  },
+                  icon: Icon(
+                    Icons.circle_outlined,
+                    size: 84,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 100,
-              width: 100,
-              //color: Colors.yellow,
-              child: IconButton(
-                onPressed: () {
-                  changeFlashState();
-                },
-                icon: Icon(
-                  flashState,
-                  size: 32,
+              Container(
+                height: 100,
+                width: 100,
+                //color: Colors.yellow,
+                child: IconButton(
+                  onPressed: () {
+                    changeFlashState();
+                  },
+                  icon: Icon(
+                    flashState,
+                    size: 32,
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
 

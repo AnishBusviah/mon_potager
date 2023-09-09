@@ -57,29 +57,34 @@ class CameraAppState extends State<CameraApp> {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return MaterialApp(
-      // home: CameraPreview(controller),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Identify Plant"),
-        ),
-        body:  CameraPreview(controller),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.image),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.circle_outlined),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.flash_off),
-              ),
-            ],
+    return Listener(
+      onPointerMove: (PointerMoveEvent event){
+        print("${event.position.dx}, ${event.position.dy}");
+      },
+      child: MaterialApp(
+        // home: CameraPreview(controller),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text("Identify Plant"),
+          ),
+          body:  CameraPreview(controller),
+          bottomNavigationBar: BottomAppBar(
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.image),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.circle_outlined),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.flash_off),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -8,8 +8,11 @@ import 'package:permission_handler/permission_handler.dart';
 import '../CapitaliseFirstLetter.dart';
 import 'package:http/http.dart' as http;
 
+import 'TextToSpeech.dart';
+
 class WeatherInfo2 extends StatefulWidget {
-  const WeatherInfo2({Key? key}) : super(key: key);
+   WeatherInfo2({Key? key}) : super(key: key);
+
 
   @override
   State<WeatherInfo2> createState() => _WeatherInfo2State();
@@ -44,7 +47,7 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
   var city;
   var country;
   var countryCode;
-  var weather;
+  static var weather;
   var temperature;
   var humidity;
   var windSpeed;
@@ -92,7 +95,10 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
       countryCode = decodedWeatherData["city"]["country"];
       weather = decodedWeatherData["list"][0]["weather"][0]["description"];
 
+
       weather = CapitaliseFirstLetter(weather);
+
+
 
       temperature = decodedWeatherData["list"][0]["main"]["temp"];
       temperature = temperature.toStringAsFixed(0);
@@ -101,6 +107,12 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
       windDirectionDegrees = decodedWeatherData["list"][0]["wind"]["deg"];
 
       icon = decodedWeatherData["list"][0]["weather"][0]["icon"];
+
+      currentWeather = weather;
+      currentTemperature = temperature;
+      currentHumidity = humidity;
+
+
     });
 
     //weather = CapitaliseFirstLetter(weather);
@@ -176,6 +188,9 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
       if (windDirectionDegrees >= 348.75) {
         windDirection = "North";
       }
+
+      currentWindDirection = windDirection;
+      currentWindSpeed = windSpeed;
     });
 
     setState(() {});
@@ -212,6 +227,10 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
     super.initState();
 
     GetPermission();
+  }
+
+  get getWeather{
+    return weather;
   }
 
   Widget build(BuildContext context) {
@@ -328,6 +347,8 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
 
     Color bgColor = Color.fromRGBO(129, 164, 131, 0.4);
 
+
+
     //Widget style 2
     return icon == null
         ? Padding(
@@ -337,162 +358,179 @@ class _WeatherInfo2State extends State<WeatherInfo2> {
               color: Color.fromRGBO(0, 102, 51, 12),
             )),
           )
-        : Padding(
-            padding: const EdgeInsets.only(left: 10+3),
-            child: Stack(
-              children: [
-                Container(
-                  height: 0.13 * MediaQuery.of(context).size.height,
-                  width: 0.94 * MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
+        : Listener(
+            onPointerMove: (PointerMoveEvent event) {
+              print("CoordWeather: ${event.position.dx},${event.position.dy}");
+              // if ((event.position.dx >= 28 && event.position.dx <= 395) &&
+              //     (event.position.dy >= 385 && event.position.dy <= 460)) {
+              //   if (!announcedWeather) {
+              //     speak("Today's weather is ${weather}. "
+              //         "The temperature is ${temperature}. "
+              //         "Humidity is at ${humidity}. "
+              //         "The wind is blowing in the direction ${windDirection} at a speed of ${windSpeed}");
+              //     announcedWeather = true;
+              //   }
+              // }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10 + 3),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 0.13 * MediaQuery.of(context).size.height,
+                    width: 0.94 * MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: bgColor.withOpacity(0.5),
+                      //     spreadRadius: 5,
+                      //     blurRadius: 7,
+                      //     offset: Offset(8, 5), // changes position of shadow
+                      //   ),
+                      // ],
                     ),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: bgColor.withOpacity(0.5),
-                    //     spreadRadius: 5,
-                    //     blurRadius: 7,
-                    //     offset: Offset(8, 5), // changes position of shadow
-                    //   ),
-                    // ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: icon == null
-                        ? CircularProgressIndicator(
-                            backgroundColor: Color.fromRGBO(0, 102, 51, 1),
-                          )
-                        : Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 75),
-                                child: SizedBox(
-                                  // height: 200,
-                                  width: 160-30,
-                                  child: Image.network(
-                                    'https://openweathermap.org/img/wn/' +
-                                        icon +
-                                        '@4x.png',
-                                    fit: BoxFit.fitWidth,
-                                    // width: 160,
-                                    // height: 160,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: icon == null
+                          ? CircularProgressIndicator(
+                              backgroundColor: Color.fromRGBO(0, 102, 51, 1),
+                            )
+                          : Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 75),
+                                  child: SizedBox(
+                                    // height: 200,
+                                    width: 160 - 30,
+                                    child: Image.network(
+                                      'https://openweathermap.org/img/wn/' +
+                                          icon +
+                                          '@4x.png',
+                                      fit: BoxFit.fitWidth,
+                                      // width: 160,
+                                      // height: 160,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "$temperature\u2103",
-                                      style: TextStyle(fontSize: 35),
-                                    ),
-                                    SizedBox(
-                                      width: 75,
-                                      child: Text(
-                                        weather,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "$temperature\u2103",
+                                        style: TextStyle(fontSize: 35),
+                                      ),
+                                      SizedBox(
+                                        width: 75,
+                                        child: Text(
+                                          weather,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            ],
-                          ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 190, top: 0),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding:
-                        const EdgeInsets.only(top: 10, left: 15+40),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Icon(Icons.water_drop),
-
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Row(
-                                children: [
-                                  Icon(CupertinoIcons.wind),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                      Text(
-                                        "$windSpeed km/h",
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      Text(
-                                        "$windDirection",
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ],),
-                                  )
-                                ],
-                              ),
-                            ),
-
-                            Row(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ImageIcon(AssetImage("assets/icons/humidity_icon.png")),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10, top: 2),
-                                  child: Text(
-                                    "$humidity%",
-                                    style: TextStyle(fontSize: 15,),
-
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-
-                          ],
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 0, top: 10),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text(
-                      //         "",
-                      //         style: TextStyle(fontSize: 15),
-                      //       ),
-                      //       Text(
-                      //         "",
-                      //         style: TextStyle(fontSize: 15),
-                      //       ),
-                      //       Text(
-                      //         "",
-                      //         style: TextStyle(fontSize: 15),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
+                  Padding(
+                    padding: const EdgeInsets.only(left: 190, top: 0),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10, left: 15 + 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              // Icon(Icons.water_drop),
+
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.wind),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "$windSpeed km/h",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          Text(
+                                            "$windDirection",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+
+                              Row(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ImageIcon(AssetImage(
+                                      "assets/icons/humidity_icon.png")),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 10, top: 2),
+                                    child: Text(
+                                      "$humidity%",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 0, top: 10),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Text(
+                        //         "",
+                        //         style: TextStyle(fontSize: 15),
+                        //       ),
+                        //       Text(
+                        //         "",
+                        //         style: TextStyle(fontSize: 15),
+                        //       ),
+                        //       Text(
+                        //         "",
+                        //         style: TextStyle(fontSize: 15),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
 
     // Center(
     //   child: notLoaded? Center(child: CircularProgressIndicator(),) : Container(

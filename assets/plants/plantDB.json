@@ -1,36 +1,49 @@
 {
   "Mint": {
+    "index": 0,
     "water": "Twice per week",
     "sunlight": "Full sun",
     "toxic": "Toxic to Pets",
     "video": "https://youtu.be/MBfzQTxPfdU",
     "plantingTime": "Mid spring, Late spring",
-    "uses": ["Culinary Flavor",
+    "uses": [
+      "Culinary Flavor",
       "Digestive Aid",
       "Aromatic Ambiance",
       "Natural Pest Control",
-      "DIY Beauty Care"],
+      "DIY Beauty Care"
+    ],
     "image": "https://ghk.h-cdn.co/assets/17/50/1600x1200/sd-aspect-1513289879-mint-plant.jpg"
   },
   "Tomato": {
+    "index": 1,
     "water": "Twice per week",
     "sunlight": "Full sun",
     "toxic": "Toxic to Pets",
     "video": "https://youtu.be/aUTCtJyO97w",
     "plantingTime": "Late spring, Early summer, Mid summer",
-    "uses": null,
+    "uses": [
+      "To cook",
+      "To make salad",
+      "In sauces"
+    ],
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317742140130164736.jpeg?x-oss-process=image/format,webp/resize,s_622&v=2"
   },
   "Avocado": {
+    "index": 2,
     "water": "Every 1-2 weeks",
     "sunlight": "Full sun",
     "toxic": null,
     "video": "https://youtu.be/Dp0MFjgaShE",
     "plantingTime": "Spring, Early fall",
-    "uses": null,
+    "uses": [
+      "To make Guacamole",
+      "In toast"
+    ],
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317749875366264832.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Red frangipani": {
+    "index": 3,
     "water": "Every 1-2 weeks",
     "sunlight": "Full sun",
     "toxic": "Toxic to Humans",
@@ -40,6 +53,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/154018648262967327.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Pepper": {
+    "index": 4,
     "water": "Twice per week",
     "sunlight": "Full sun",
     "toxic": null,
@@ -49,6 +63,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/317731389827022848.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Chinese hibiscus": {
+    "index": 5,
     "water": "Every 1-2 weeks",
     "sunlight": "Full sun",
     "toxic": null,
@@ -58,6 +73,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/154120121160302616.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Coconut tree": {
+    "index": 6,
     "water": "Every 1-2 weeks",
     "sunlight": "Full sun",
     "toxic": null,
@@ -67,6 +83,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/201174919527104512.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Madagascar periwinkle": {
+    "index": 7,
     "water": "Twice per week",
     "sunlight": "Full sun",
     "toxic": "Toxic to Human & Pets",
@@ -76,6 +93,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/152618265586171905.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Banyan fig": {
+    "index": 8,
     "water": "Every 1-2 weeks",
     "sunlight": "Partial sun",
     "toxic": "Toxic to Pets",
@@ -85,6 +103,7 @@
     "image": "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/201210516216086528.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"
   },
   "Golden trumpet": {
+    "index": 9,
     "water": "Every week",
     "sunlight": "Full sun",
     "toxic": "Toxic to Humans",

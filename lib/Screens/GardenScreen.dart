@@ -4,6 +4,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:mon_potager/models/Colours.dart";
 import "package:mon_potager/models/GardenCard.dart";
+import "package:mon_potager/widgets/TextToSpeech.dart";
 
 import "../Navigation.dart";
 import "../models/myGardenPlant.dart";
@@ -16,27 +17,40 @@ class MyGarden extends StatefulWidget {
 }
 
 class _MyGardenState extends State<MyGarden> {
+
+  @override
+  void initState() {
+    speak("My Garden Screen");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          shape: CircleBorder(),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CameraRoute("Identify Plant")),
-            );
+        floatingActionButton: GestureDetector(
+          onLongPress: (){
+            speak("Click to add plant to my garden");
           },
-          child: Icon(Icons.add),
-          backgroundColor: Color.fromARGB(500, 36, 139, 88),
+          child: FloatingActionButton(
+            shape: CircleBorder(),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CameraRoute("Identify Plant")),
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Color.fromARGB(500, 36, 139, 88),
+          ),
         ),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
             MediaQuery.of(context).size.height * 1 / 9,
           ),
           child: AppBar(
+
             automaticallyImplyLeading: false,
             leading: Padding(
               padding: const EdgeInsets.only(top: 24),
@@ -44,7 +58,7 @@ class _MyGardenState extends State<MyGarden> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.arrow_back, color: Colors.white,),
               ),
             ),
             flexibleSpace: Container(
@@ -288,12 +302,17 @@ Stream<List<MyPlant>> readPlants() =>
 
 Widget buildMyGarden(MyPlant myPlant) => Padding(
       padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-      child: GardenCard(
-        plantName: myPlant.name,
-        latinName: myPlant.latinName,
-        sun: myPlant.sun,
-        water: myPlant.water,
-        plantImage: myPlant.image,
-        plantID: myPlant.plantID,
+      child: GestureDetector(
+        onLongPress: (){
+          speak("${myPlant.name}, click to assess progress");
+        },
+        child: GardenCard(
+          plantName: myPlant.name,
+          latinName: myPlant.latinName,
+          sun: myPlant.sun,
+          water: myPlant.water,
+          plantImage: myPlant.image,
+          plantID: myPlant.plantID,
+        ),
       ),
     );

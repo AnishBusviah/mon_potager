@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mon_potager/Navigation.dart';
+import 'package:mon_potager/models/Colours.dart';
 
 import '../widgets/AddNotePhoto.dart';
 
@@ -51,7 +52,13 @@ class _WriteNoteState extends State<WriteNote> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Text("Cancel")),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  )),
               GestureDetector(
                   onTap: () {
                     saveToDatabase(
@@ -60,7 +67,11 @@ class _WriteNoteState extends State<WriteNote> {
                         imageBase64: encodedImage);
                     Navigator.pop(context);
                   },
-                  child: Text("Done")),
+                  child: Text(
+                    "Done",
+                    style: TextStyle(
+                        color: solidGreen, fontWeight: FontWeight.bold),
+                  )),
             ],
           ),
         ),
@@ -153,6 +164,7 @@ Future saveToDatabase({
     'date': formattedDate,
     'note': note,
     'image': imageBase64,
+    'createdAt': Timestamp.now(),
   };
 
   await noteDatabase.add(noteJson);

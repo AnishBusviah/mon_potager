@@ -65,6 +65,7 @@ dependencies:
   firebase_database: ^10.2.5
   timeline_tile: ^2.0.0
   awesome_notifications: ^0.7.4+1
+  vibration: ^1.8.1
 
 
 dev_dependencies:
@@ -137,6 +138,16 @@ flutter:
     - assets/careGuides/Mint/
     - assets/treatmentGuides/
     - assets/icons/humidity_icon.png
+    - assets/careGuides/avocado/
+    - assets/careGuides/banyan fig/
+    - assets/careGuides/chinese hibiscus/
+    - assets/careGuides/coconut tree/
+    - assets/careGuides/golden trumpet/
+    - assets/careGuides/madagascar periwinkle/
+    - assets/careGuides/pepper/
+    - assets/careGuides/red frangipani/
+    - assets/careGuides/tomato/
+    - assets/treatmentGuides/
 
 
 

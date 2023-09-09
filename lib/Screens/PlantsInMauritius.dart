@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mon_potager/Screens/plantPage2.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 class PlantsInMauritius extends StatelessWidget {
   const PlantsInMauritius({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class PlantsInMauritius extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Mint"),));},
+              onLongPress: (){speak("Mint plant. Click for more info");},
               child: plantCard(
                   name: "Mint",
                   image:
@@ -30,6 +32,7 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Tomato"),));},
+              onLongPress: (){speak("Tomato plant. Click for more info");},
               child: plantCard(
                   name: "Tomato",
                   image:
@@ -37,6 +40,7 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Avocado"),));},
+              onLongPress: (){speak("Avocado tree. Click for more info");},
               child: plantCard(
                   name: "Avocado",
                   image:
@@ -44,6 +48,7 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Red frangipani"),));},
+              onLongPress: (){speak("Red frangipani tree. Click for more info");},
               child: plantCard(
                   name: "Red frangipani",
                   image:
@@ -51,6 +56,7 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Pepper"),));},
+              onLongPress: (){speak("Pepper plant. Click for more info");},
               child: plantCard(
                   name: "Pepper",
                   image:
@@ -58,13 +64,15 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Chinese hibiscus"),));},
+              onLongPress: (){speak("Hibiscus plant. Click for more info");},
               child: plantCard(
-                  name: "Chinese hibiscus",
+                  name: "Hibiscus",
                   image:
                       "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/154120121160302616.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"),
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Coconut tree"),));},
+              onLongPress: (){speak("Coconut tree. Click for more info");},
               child: plantCard(
                   name: "Coconut tree",
                   image:
@@ -72,13 +80,15 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Madagascar periwinkle"),));},
+              onLongPress: (){speak("Periwinkle plant. Click for more info");},
               child: plantCard(
-                  name: "Madagascar periwinkle",
+                  name: "Periwinkle",
                   image:
                       "https://www.picturethisai.com/image-handle/website_cmsname/image/1080/152618265586171905.jpeg?x-oss-process=image/format,webp/resize,s_422&v=1.2"),
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Banyan fig"),));},
+              onLongPress: (){speak("Bayan fig tree. Click for more info");},
               child: plantCard(
                   name: "Banyan fig",
                   image:
@@ -86,6 +96,7 @@ class PlantsInMauritius extends StatelessWidget {
             ),
             GestureDetector(
               onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => plantPage2(plantName: "Golden trumpet"),));},
+              onLongPress: (){speak("Golden trumpet plant. Click for more info");},
               child: plantCard(
                   name: "Golden trumpet",
                   image:

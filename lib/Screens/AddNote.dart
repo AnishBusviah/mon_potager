@@ -31,6 +31,7 @@ class _AddNoteState extends State<AddNote> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -59,6 +60,16 @@ class _AddNoteState extends State<AddNote> {
                 children: [
                   Stack(children: [
                     Padding(
+                      padding: const EdgeInsets.only(),
+                      child: Divider(
+                        thickness: 2+2,
+                        indent: 20+100+50+12,
+                        endIndent: 20+100+50+12,
+                        height: 125-100,
+                        
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(left: 20, top: 20),
                       child: Text(widget.plantName,
                           style: TextStyle(
@@ -78,6 +89,7 @@ class _AddNoteState extends State<AddNote> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Container(
+                        padding: EdgeInsets.all(0),
                         // color: Colors.redAccent,
                         height: 500,
                         child: Expanded(
@@ -97,10 +109,12 @@ class _AddNoteState extends State<AddNote> {
                                         } else if (snapshot.hasData) {
                                           final plantNotes = snapshot.data!;
                                           return Expanded(
-                                              child: ListView(padding: EdgeInsets.only(bottom: 70),
+                                              child: ListView(
+
+                                                padding: EdgeInsets.only(bottom: 70+100),
 
 
-                                            reverse: true,
+                                            // reverse: true,
                                             children: plantNotes
                                                 .map(buildPlantNotes)
                                                 .toList(),
@@ -194,13 +208,21 @@ class _AddNoteState extends State<AddNote> {
                           width: 350,
                           // color: Colors.red,
                           decoration: BoxDecoration(
+                            color: Color.fromRGBO(207, 253, 188, .5),
                               border: Border.all(color: solidGreen),
                               borderRadius: BorderRadius.circular(15)),
+
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("How does it look?"),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("How does it look?"),
+                                    Icon(Icons.camera_alt_outlined)
+                                  ],
+                                ),
                                 Text("See any new leaves or flowers?"),
                                 Text("Notice any new growth?"),
                                 Text("Record your plant's progress!"),
@@ -217,12 +239,29 @@ class _AddNoteState extends State<AddNote> {
   }
 }
 
-Stream<List<PlantNote>> readPlantNotes(String plantName) =>
-    FirebaseFirestore.instance.collection(plantName).snapshots().map(
+Stream<List<PlantNote>> readPlantNotes(String plantName) {
+  // print(FirebaseFirestore.instance.collection(plantName)
+  // .orderBy('createdAt', descending: false)
+  //     .snapshots().map(
+  //       (snapshot) => snapshot.docs
+  //       .map((doc) => PlantNote.fromJson(doc.data()))
+  //       .toList(),
+  // ));
+
+
+    return FirebaseFirestore.instance.collection(plantName)
+        .orderBy('createdAt', descending: false)
+        .snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) => PlantNote.fromJson(doc.data()))
               .toList(),
         );
+
+}
+
+int compare(PlantNote a, PlantNote b){
+  return a.date.compareTo(b.date);
+}
 
 Widget buildPlantNotes(PlantNote note) => SizedBox(
       height: 200,
@@ -236,7 +275,9 @@ Widget buildPlantNotes(PlantNote note) => SizedBox(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text(note.date), Text(note.note)],
+              children: [Text(note.date), SizedBox(
+                  width: 150,
+                  child: Text(note.note))],
             ),
             note.image == ""
                 ? SizedBox(

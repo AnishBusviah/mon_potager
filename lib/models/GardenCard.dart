@@ -90,8 +90,8 @@ class _GardenCardState extends State<GardenCard> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 25, left: 5),
                       child: Container(
-                        width: 180,
-                        height: 100 + 30,
+                        width: 180+1,
+                        height: 100 + 30+20,
                         // color: Colors.red,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

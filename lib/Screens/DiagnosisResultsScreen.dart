@@ -26,19 +26,21 @@ class _DiagnosisResultsScreenState extends State<DiagnosisResultsScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
             title: Text(
-              "Diagnosis Details",
+              "Diagnosis Details", style: TextStyle(color: Colors.white),
             ),
             backgroundColor: pageTitleColour),
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 10-5),
               child: Container(
+                padding: EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: FileImage(widget.image), fit: BoxFit.fitWidth,)),
+                      image: FileImage(widget.image), fit: BoxFit.fitWidth,)),
                 height: 6 / 20 * MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width * 19/20,
               ),
