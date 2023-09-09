@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,7 @@ import 'package:mon_potager/ui/task_type_card.dart';
 import 'package:mon_potager/ui/textstyle.dart';
 import 'package:mon_potager/ui/widgets/create_task.dart';
 import 'package:mon_potager/ui/widgets/input_field.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -74,9 +76,47 @@ class _AddTaskPageState extends State<AddTaskPage> {
     "Monthly",
   ];
 
+
+
+  bool _listening = false;
+  Icon _micIcon = Icon(Icons.mic_none,color: Color.fromARGB(255, 173, 236, 180) );
+
+void _toggleListening(){
+  if(!_listening){
+    setState(() {
+      _listening = true;
+      speak("Listening...");
+      _micIcon = Icon(Icons.mic, color: solidGreen,);
+    });
+  }else{
+    setState(() {
+      _listening = false;
+      speak("Recording Stopped!");
+      _micIcon = Icon(Icons.mic_none,color: Color.fromARGB(255, 173, 236, 180)
+      );});
+  }
+
+
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 595, left: 310),
+        child: AvatarGlow(
+            endRadius: 25,
+            animate: _listening,
+            duration: Duration(milliseconds: 2000),
+            glowColor: solidGreen,
+            repeat: true,
+            repeatPauseDuration: Duration(milliseconds: 100),
+            showTwoGlows: true,
+            child: GestureDetector(
+                onTap: _toggleListening,
+                child: _micIcon),
+      )),
       appBar: _appbar(context, selectedTaskType),
       body: Container(
         padding: const EdgeInsets.only(
@@ -120,7 +160,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: "Description",
                 hint: "Enter your note",
                 controller: _noteController,
-                widget: null,
+                widget: null
+                // AvatarGlow(
+                //   endRadius: 25,
+                //   animate: false,
+                //   duration: Duration(milliseconds: 2000),
+                //   glowColor: Colors.red,
+                //   repeat: true,
+                //   repeatPauseDuration: Duration(milliseconds: 100),
+                //   showTwoGlows: true,
+                //   child: IconButton(
+                //     icon: Icon(Icons.mic_none_outlined,
+                //         color: Color.fromARGB(255, 173, 236, 180)),
+                //     onPressed: () {},
+                //   ),
+                // ),
               ),
               MyInputField(
                 title: "Date",
@@ -198,7 +252,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _validateDate() async {
-    var title =  taskTypes[taskTypes.indexWhere((element) => element.isChoose == true)].name;
+    var title =
+        taskTypes[taskTypes.indexWhere((element) => element.isChoose == true)]
+            .name;
 
     var body = _noteController.text;
 
@@ -218,15 +274,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     await NotificationService.scheduleNotification(
         title: title,
-      body: body,
-      day: day,
-      month: month,
-      year: year,
-      hour: hour,
-      minute: minute
-
-
-    );
+        body: body,
+        day: day,
+        month: month,
+        year: year,
+        hour: hour,
+        minute: minute);
 
     _addTaskToDb();
     Get.back();
@@ -290,7 +343,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _getDate() async {
     DateTime? _pickerDate = await showDatePicker(
-
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2018),
@@ -322,12 +374,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _showTimePicker() {
     TimeOfDay currentTime = TimeOfDay.now();
 
-    return
-      showTimePicker(
+    return showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context,
       initialTime: currentTime,
-
     );
   }
 
