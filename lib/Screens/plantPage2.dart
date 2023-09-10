@@ -241,12 +241,12 @@ class _plantPage2State extends State<plantPage2> {
           }
         }else if ((event.position.dx >= 307 && event.position.dx <= 408) &&
             (event.position.dy >= 384 && event.position.dy <= 424)) {
-          if (!speakSun) {
+          if (!speakToxic) {
             if(widget.plantData["toxic"] != null){
               speak("Plant is ${widget.plantData["toxic"]}");
               setState(() {
                 setFalse();
-                speakSun = true;
+                speakToxic = true;
               });
             }
 

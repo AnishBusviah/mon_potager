@@ -200,7 +200,7 @@ class _logInScreenState extends State<logInScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Scene(),
+                  builder: (context) => Scene( loadScreen: 0),
                 ));
           },
         ),
@@ -279,7 +279,7 @@ class _logInScreenState extends State<logInScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Scene(),
+                          builder: (context) => Scene(loadScreen: 0),
                         ));
                   },
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mon_potager/models/Colours.dart';
+import 'package:mon_potager/ui/reminder_screen.dart';
 import 'package:mon_potager/ui/task_type.dart';
 import 'package:mon_potager/ui/task_type_card.dart';
 import 'package:mon_potager/ui/textstyle.dart';
@@ -13,6 +14,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:sqflite/sqflite.dart';
 
+import '../Home.dart';
 import '../controllers/task_controller.dart';
 import '../models/task.dart';
 import '../services/awesome_notification_service.dart';
@@ -181,6 +183,7 @@ Future<void> _toggleListening() async {
               MyInputField(
                 title: "Description",
                 hint: "Enter your note",
+
                 controller: _noteController,
                 widget: null
                 // AvatarGlow(
@@ -294,6 +297,14 @@ Future<void> _toggleListening() async {
     int minute = time.minute;
     // print("hi${time.hour}",);
 
+    if(title == "Fertilser"){
+      title = "Fertilise";
+    }else if(title == "Water"){
+      title == "Water";
+    }else if(title == "Pruning"){
+      title == "Prune";
+    }else title = "";
+
     await NotificationService.scheduleNotification(
         title: title,
         body: body,
@@ -303,8 +314,11 @@ Future<void> _toggleListening() async {
         hour: hour,
         minute: minute);
 
+
+
     _addTaskToDb();
-    Get.back();
+    // Get.back();
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ReminderScreen(),));
   }
 
   _addTaskToDb() async {
@@ -322,6 +336,7 @@ Future<void> _toggleListening() async {
         ),
       );
       print('my id is $value');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Scene(loadScreen: 2),));
     } catch (e) {
       print('Error occurred while adding task: $e');
     }

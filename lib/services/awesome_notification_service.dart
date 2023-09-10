@@ -8,7 +8,7 @@ class NotificationService {
   static Future<void> initializeNotification() async {
     await AwesomeNotifications().initialize(
 
-      null,
+      'resource://drawable/monpotagerlogo',
       [
         NotificationChannel(
             channelGroupKey: 'high_importance_channel',

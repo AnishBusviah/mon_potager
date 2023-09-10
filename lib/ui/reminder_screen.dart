@@ -33,6 +33,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   void initState() {
+    _taskController.getTask();
     super.initState();
 
   }
@@ -132,21 +133,24 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   position: index,
                   child: SlideAnimation(
                     child: FadeInAnimation(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                _showBottomSheet(context, task);
-                              },
-                              child: TaskTile(
-                                task: task,
-                                selectedTaskType: selectedTaskType,
-                                todo: task.todo,
-                                // selectedImageIndex1: 1,
-                                // selectedImageIndex2: 2,
-                                // selectedImageIndex0: 0,
-                              )),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  _showBottomSheet(context, task);
+                                },
+                                child: TaskTile(
+                                  task: task,
+                                  selectedTaskType: selectedTaskType,
+                                  todo: task.todo,
+                                  // selectedImageIndex1: 1,
+                                  // selectedImageIndex2: 2,
+                                  // selectedImageIndex0: 0,
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                   ),

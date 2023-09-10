@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 import '../Screens/AddNote.dart';
 import '../ui/add_task_bar.dart';
@@ -177,6 +178,7 @@ class _GardenCardState extends State<GardenCard> {
                             // value: SampleItem.itemTwo,
                             child: GestureDetector(
                                 onTap: () {
+                                  speak("Reminder Screen");
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -190,6 +192,7 @@ class _GardenCardState extends State<GardenCard> {
                           ),
                           PopupMenuItem<SampleItem>(
                             onTap: () {
+
                               final plantToDelete = FirebaseFirestore.instance
                                   .collection("myPlants")
                                   .doc(widget.plantID);
@@ -197,9 +200,14 @@ class _GardenCardState extends State<GardenCard> {
                               plantToDelete.delete();
                             },
                             // value: SampleItem.itemThree,
-                            child: Text(
-                              'Remove',
-                              style: TextStyle(color: Colors.red),
+                            child: GestureDetector(
+                              onTap: (){
+                                speak("${widget.plantName} was removed from Garden");
+                              },
+                              child: Text(
+                                'Remove',
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ),
                           ),
                         ],

@@ -46,7 +46,7 @@ class _ForumScreenState extends State<ForumScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Scene(),
+                  builder: (context) => Scene(loadScreen: 0),
                 ));
           },
         ),

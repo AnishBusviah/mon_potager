@@ -41,7 +41,7 @@ class MyInputField extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextFormField(
+                  child: TextFormField(maxLength: 20,
                     readOnly: widget == null ? false : true,
                     autofocus: false,
                     cursorColor: Colors.black,

@@ -27,6 +27,8 @@ import 'models/Colours.dart';
 import 'models/DrawerWidget.dart';
 
 class Scene extends StatefulWidget {
+  int loadScreen = 0;
+  Scene({required this.loadScreen});
   @override
   State<Scene> createState() => _SceneState();
 }
@@ -63,6 +65,7 @@ class _SceneState extends State<Scene> {
   @override
   void initState() {
     speak("HomeScreen");
+    _currentScreen = widget.loadScreen;
     _icon[0] = _selected;
     super.initState();
   }

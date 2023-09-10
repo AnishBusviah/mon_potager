@@ -35,12 +35,13 @@ class TaskTile extends StatelessWidget {
 
 
     return Container(
-      width: 350,
+      width: 350+25,
       height: 140,
-      padding: const EdgeInsets.fromLTRB(30, 20, 20, 30),
+      padding: const EdgeInsets.fromLTRB(30, 20-2, 15, 30),
       margin: const EdgeInsets.only(
         bottom: 12,
         left: 20,
+        right: 0
       ),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -51,105 +52,111 @@ class TaskTile extends StatelessWidget {
         ),
         color: Color.fromARGB(255, 62, 182, 158),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 12,
-                  width: 26,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    selectedImageIndex == 4? SizedBox() :
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child:  Image.network(
-                          task?.imageUrls?[selectedImageIndex] ?? '',
-                          fit: BoxFit.cover,
-                          width: 60,
-                          height: 50,
+      child: SizedBox(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 12,
+                    width: 26,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      selectedImageIndex == 4? SizedBox() :
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child:  Image.network(
+                            task?.imageUrls?[selectedImageIndex] ?? '',
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 50,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 18),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Icon(
-                              Icons.access_time_rounded,
-                              color: Colors.grey[200],
-                              size: 20,
-                            ),
-                            SizedBox(width: 14),
-                            Text(
-                              "${task!.startTime}",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(
-                                    fontSize: 15, color: Colors.grey[100]),
+                      SizedBox(width: 18),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.access_time_rounded,
+                                color: Colors.grey[200],
+                                size: 20,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 8, height: 5),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 4, right: 25, left: 25),
-                          child: Text(
-                            task?.note ?? "",
-                            style: GoogleFonts.lato(
-                              textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                              SizedBox(width: 14),
+                              Text(
+                                "${task!.startTime}",
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                      fontSize: 15, color: Colors.grey[100]),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 5, height: 5),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 4-4, right: 25, left: 0,),
+                            child: Container(
+                              padding: EdgeInsets.all(0),
+                              width: 150,
+                              child: Text(
+                                task?.note ?? "",
+                                style: GoogleFonts.lato(
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(width: 10),
-          Container(
-            height: 100,
-            width: 2.0,
-            color: Colors.grey[200]!.withOpacity(0.7),
-          ),
-          SizedBox(width: 10),
-          Center(
-            child: RotatedBox(
-              quarterTurns: 0,
-              child: task!.isCompleted == 1
-                  ? const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                      size: 40,
-                    )
-                  : Icon(
-                      Icons.delete,
-                      color: Color.fromARGB(255, 245, 242, 241),
-                      size: 40,
-                    ),
+            SizedBox(width: 10),
+            Container(
+              height: 100,
+              width: 2.0,
+              color: Colors.grey[200]!.withOpacity(0.7),
             ),
-          ),
-        ],
+            SizedBox(width: 10),
+            Center(
+              child: RotatedBox(
+                quarterTurns: 0,
+                child: task!.isCompleted == 1
+                    ? const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 40,
+                      )
+                    : Icon(
+                        Icons.delete,
+                        color: Color.fromARGB(255, 245, 242, 241),
+                        size: 40,
+                      ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

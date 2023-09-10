@@ -19,7 +19,7 @@ class FirstRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: Scene()
+      body: Scene(loadScreen: 0,)
       // Center(
       //   child: Column(
       //     children: [
