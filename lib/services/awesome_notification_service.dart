@@ -7,6 +7,7 @@ import '../main.dart';
 class NotificationService {
   static Future<void> initializeNotification() async {
     await AwesomeNotifications().initialize(
+
       null,
       [
         NotificationChannel(
@@ -147,11 +148,11 @@ class NotificationService {
       ),
       actionButtons: actionButton,
       schedule: NotificationCalendar(
-        day: day,
-        month: month,
-        year: year,
-        hour: hour,
-        minute: minute
+          day: day,
+          month: month,
+          year: year,
+          hour: hour,
+          minute: minute
       ),
     );
   }

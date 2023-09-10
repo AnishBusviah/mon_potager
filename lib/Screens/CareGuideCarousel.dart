@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 import '../models/CareCards.dart';
 import '../models/PlantAssessmentResults.dart';
@@ -21,7 +22,7 @@ class _CareGuideCarouselState extends State<CareGuideCarousel> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    speak("Plant care guide screen");
     super.initState();
     _pageController =
         PageController(initialPage: _currentPage, viewportFraction: 0.8);
@@ -90,61 +91,73 @@ class _CareGuideCarouselState extends State<CareGuideCarousel> {
   }
 
   Widget carouselCard(DataModel data) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Hero(
-              tag: data.imageName,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailsScreen(data: data)));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      image: DecorationImage(
-                          image: AssetImage(
-                            data.imageName,
-                          ),
-                          fit: BoxFit.fill),
-                      boxShadow: const [
-                        BoxShadow(
-                            offset: Offset(0, 4),
-                            blurRadius: 4,
-                            color: Colors.black26)
-                      ]),
+    return GestureDetector(
+      onLongPress: (){
+        speak("${data.title}. ${data.price}");
+      },
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Hero(
+                tag: data.imageName,
+                child: GestureDetector(
+                  // onTap: () {
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => DetailsScreen(data: data)));
+                  // },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        image: DecorationImage(
+                            image: AssetImage(
+                              data.imageName,
+                            ),
+                            fit: BoxFit.fill),
+                        boxShadow: const [
+                          BoxShadow(
+                              offset: Offset(0, 4),
+                              blurRadius: 4,
+                              color: Colors.black26)
+                        ]),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Text(
-            data.title,
-            style: const TextStyle(
-                color: Colors.black45,
-                fontSize: 25,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            data.price,
-            style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
-        )
-      ],
+          GestureDetector(
+
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Text(
+                    data.title,
+                    style: const TextStyle(
+                        color: Colors.black45,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    data.price,
+                    style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

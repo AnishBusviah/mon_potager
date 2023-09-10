@@ -12,6 +12,8 @@ import 'WeatherWidget.dart';
 
 class FirstRoute extends StatelessWidget {
   const FirstRoute({super.key});
+  // static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +191,7 @@ class _CameraRouteState extends State<CameraRoute> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+
         title: Text(widget.title, style: TextStyle(color: Colors.white),),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,

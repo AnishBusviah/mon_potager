@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:ffi';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/plantNote.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/TextToSpeech.dart';
 import 'WriteNote.dart';
 
 class AddNote extends StatefulWidget {
@@ -25,10 +28,21 @@ class AddNote extends StatefulWidget {
   State<AddNote> createState() => _AddNoteState();
 }
 
+
+
 class _AddNoteState extends State<AddNote> {
+
+@override
+  void initState() {
+    speak("${widget.plantName} monitoring page");
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
@@ -194,6 +208,9 @@ class _AddNoteState extends State<AddNote> {
                     Padding(
                       padding: const EdgeInsets.only(top: 40, left: 0),
                       child: GestureDetector(
+                        onLongPress: (){
+                          speak("Click to add plant notes");
+                        },
                         onTap: () {
                           Navigator.push(
                               context,
@@ -265,31 +282,37 @@ int compare(PlantNote a, PlantNote b){
 
 Widget buildPlantNotes(PlantNote note) => SizedBox(
       height: 200,
-      child: TimelineTile(
-        beforeLineStyle: LineStyle(color: solidGreen),
-        afterLineStyle: LineStyle(color: solidGreen),
-        indicatorStyle: IndicatorStyle(color: solidGreen),
-        isFirst: false,
-        endChild: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text(note.date), SizedBox(
-                  width: 150,
-                  child: Text(note.note))],
-            ),
-            note.image == ""
-                ? SizedBox(
+      child: GestureDetector(
+        onLongPress: (){
+          speak("${note.note} on ${note.date}");
+        },
+        child: TimelineTile(
+          beforeLineStyle: LineStyle(color: solidGreen),
+          afterLineStyle: LineStyle(color: solidGreen),
+          indicatorStyle: IndicatorStyle(color: solidGreen),
+          isFirst: false,
+          endChild: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Text(note.date), SizedBox(
                     width: 150,
-                  )
-                : Container(
-                    width: 150,
-                    child: Image.memory(
-                      base64Decode(note.image),
-                    ),
-                  )
-          ],
+                    child: Text(note.note))],
+              ),
+              note.image == ""
+                  ? SizedBox(
+                      width: 150,
+                    )
+                  : Container(
+                      width: 150,
+                      child: Image.memory(
+                        base64Decode(note.image),
+                      ),
+                    )
+            ],
+          ),
         ),
       ),
     );

@@ -196,6 +196,16 @@ class _plantPage2State extends State<plantPage2> {
     speakCare = false;
   }
 
+  void speakNovibrate(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setVolume(0.5);
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.setPitch(1); // 0.5 to 1.5
+    // HapticFeedback.vibrate();
+    // Vibration.vibrate(duration: 200);
+    await flutterTts.speak(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Listener(
@@ -239,6 +249,39 @@ class _plantPage2State extends State<plantPage2> {
                 speakSun = true;
               });
             }
+
+          }
+        }else if ((event.position.dx >= 36 && event.position.dx <= 374) &&
+            (event.position.dy >= 497 && event.position.dy <= 537)) {
+          if (!speakName) {
+
+              speak("Plant name. ${widget.plantName}");
+              setState(() {
+                setFalse();
+                speakName = true;
+              });
+          }
+        }else if ((event.position.dx >= 36 && event.position.dx <= 374) &&
+            (event.position.dy >= 573 && event.position.dy <= 696)) {
+          if (!speakUses) {
+              speak("Plant uses. ${widget.usesList}");
+              // for(String use in widget.usesList){
+              //   speakNovibrate("no${widget.usesList.indexOf(use)+1}. ${use}");
+              // }
+              setState(() {
+                setFalse();
+                speakUses = true;
+              });
+
+          }
+        }else if ((event.position.dx >= 36 && event.position.dx <= 374) &&
+            (event.position.dy >= 742 && event.position.dy <= 782)) {
+          if (!speakCare) {
+              speak("Click for plant care");
+              setState(() {
+                setFalse();
+                speakCare = true;
+              });
 
           }
         }else{
@@ -484,7 +527,7 @@ class _plantPage2State extends State<plantPage2> {
                 // ),
                 Container(
                   margin: EdgeInsets.fromLTRB(29, 410, 30, 60),
-                  padding: EdgeInsets.fromLTRB(25, 10, 60, 10),
+                  padding: EdgeInsets.fromLTRB(25, 10, 60-40, 10),
                   height: MediaQuery.of(context).size.height * 3 / 40,
                   // was 100
                   width: 500,
@@ -499,27 +542,35 @@ class _plantPage2State extends State<plantPage2> {
                   child: Container(
                     padding: EdgeInsets.all(0),
                     height: 140,
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Common name: ",
-                        style: TextStyle(
-                          color: Color.fromARGB(200, 137, 136, 136),
-                          // Change the color of "Name:"
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: widget.plantName,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Center(
+
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Common name: ",
+                              style: TextStyle(
+                                color: Color.fromARGB(200, 137, 136, 136),
+                                // Change the color of "Name:"
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: widget.plantName,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
+                            textAlign: TextAlign.left,
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -703,7 +754,7 @@ class _plantPage2State extends State<plantPage2> {
                                               ),
                                             )
                                           : Text(
-                                              ("${index + 1}. ${widget.usesList[index]}"),
+                                              ("${widget.usesList[index]}"),
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,

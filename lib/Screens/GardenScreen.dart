@@ -57,6 +57,7 @@ class _MyGardenState extends State<MyGarden> {
               child: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  speak("HomeScreen");
                 },
                 icon: Icon(Icons.arrow_back, color: Colors.white,),
               ),
@@ -304,7 +305,7 @@ Widget buildMyGarden(MyPlant myPlant) => Padding(
       padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: GestureDetector(
         onLongPress: (){
-          speak("${myPlant.name}, click to assess progress");
+          speak("${myPlant.name}. Click to assess progress");
         },
         child: GardenCard(
           plantName: myPlant.name,

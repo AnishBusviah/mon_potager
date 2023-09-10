@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mon_potager/Home.dart';
 import 'package:mon_potager/Screens/ForumScreen.dart';
 import 'package:mon_potager/Screens/ProfileScreen.dart';
 import 'package:mon_potager/Screens/registerScreen.dart';
+import 'package:mon_potager/isLogin.dart';
 
 import '../models/Colours.dart';
 
@@ -108,15 +110,16 @@ class _logInScreenState extends State<logInScreen> {
                   minimumSize: Size(100, 40), // foreground
                 ),
                 onPressed: () {
+                  toggleLogin();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ForumScreen(),
                       )
-                  // setState(() {
-                  //   isLoggedIn = true;
-                  // },
-                  );
+                      // setState(() {
+                      //   isLoggedIn = true;
+                      // },
+                      );
                 },
                 child: Text('Login'),
               )
@@ -174,7 +177,7 @@ class _logInScreenState extends State<logInScreen> {
           ),
           TextButton(
             style: TextButton.styleFrom(
-                padding: const EdgeInsets.only(left: 725 - 640)),
+                padding: const EdgeInsets.only(left: 725 - 640 - 5)),
             onPressed: () => print("Forgot Password Pressed"),
             child: Text(
               'Forgot Password?',
@@ -187,9 +190,21 @@ class _logInScreenState extends State<logInScreen> {
     );
   }
 
-  Widget ProfileScreen(){
+  Widget ProfileScreen() {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scene(),
+                ));
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: pageTitleColour,
         title: Text('My Profile'),
       ),
@@ -230,7 +245,8 @@ class _logInScreenState extends State<logInScreen> {
               ElevatedButton(
                 onPressed: () {},
                 child: Text('About'),
-                style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
               ),
               SizedBox(height: 8),
               ElevatedButton(
@@ -240,7 +256,8 @@ class _logInScreenState extends State<logInScreen> {
                   });
                 },
                 child: Text('Logout'),
-                style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
               ),
             ],
           ),
@@ -253,8 +270,22 @@ class _logInScreenState extends State<logInScreen> {
   Widget build(BuildContext context) {
     return isLoggedIn == false
         ? Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+                automaticallyImplyLeading: false,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Scene(),
+                        ));
+                  },
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                iconTheme: IconThemeData(color: Colors.white)),
             body: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.light,
               child: GestureDetector(

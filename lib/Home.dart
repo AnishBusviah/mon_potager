@@ -62,6 +62,7 @@ class _SceneState extends State<Scene> {
 
   @override
   void initState() {
+    speak("HomeScreen");
     _icon[0] = _selected;
     super.initState();
   }

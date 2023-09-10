@@ -17,7 +17,9 @@ import 'add_task_bar.dart';
 import 'widgets/button.dart';
 
 class ReminderScreen extends StatefulWidget {
-  const ReminderScreen({super.key});
+   ReminderScreen({super.key,});
+
+
 
   @override
   // ignore: library_private_types_in_public_api
@@ -47,7 +49,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           shape: CircleBorder(),
             
           onPressed: () async {
-            await Get.to(() => const AddTaskPage());
+            await Get.to(() =>  AddTaskPage());
             _taskController.getTask();
           },
           child: Icon(Icons.add),

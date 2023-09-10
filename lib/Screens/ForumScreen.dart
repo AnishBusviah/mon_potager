@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mon_potager/Screens/ProfileScreen.dart';
 import 'package:mon_potager/models/Colours.dart';
+
+import '../Home.dart';
 
 class ForumScreen extends StatefulWidget {
   @override
@@ -36,9 +39,49 @@ class _ForumScreenState extends State<ForumScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Forum"),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scene(),
+                ));
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          "Forum",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: pageTitleColour,
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 60),
+            child: Column(
+              children: [IconButton(onPressed: () {}, icon: Icon(Icons.forum))],
+            ),
+          ),
+          Column(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) =>
+                        ProfileScreen()
+
+                    ));
+                  },
+                  icon: Icon(Icons.person))
+            ],
+          )
+        ],
+      )),
       body: Container(
         padding: EdgeInsets.only(left: 10, right: 10, top: 45 - 30),
         child: Column(
@@ -83,11 +126,12 @@ class _ForumScreenState extends State<ForumScreen> {
         height: 60,
         child: FittedBox(
           child: FloatingActionButton(
+            shape: CircleBorder(),
             onPressed: () {},
             child: Icon(
               Icons.add,
             ),
-            backgroundColor:pageTitleColour,
+            backgroundColor: solidGreen,
             elevation: 0,
           ),
         ),

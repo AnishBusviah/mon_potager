@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mon_potager/models/Colours.dart';
 import 'package:mon_potager/models/PlantAssessmentResults.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 import 'TreatmentGuideCarousel.dart';
 
@@ -17,7 +18,16 @@ class DiagnosisResultsScreen extends StatefulWidget {
   State<DiagnosisResultsScreen> createState() => _DiagnosisResultsScreenState();
 }
 
+
+
 class _DiagnosisResultsScreenState extends State<DiagnosisResultsScreen> {
+
+  @override
+  void initState() {
+    speak("Diagnosis Results Screen. Disease Detected. ${widget.diagnosis.diseases[0].diseaseDetails.localName}!");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mon_potager/widgets/TextToSpeech.dart';
 
 import '../models/CareCards.dart';
 
@@ -11,6 +12,13 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+
+  @override
+  void initState() {
+    speak("Plant care screen");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

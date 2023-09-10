@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mon_potager/Screens/ForumScreen.dart';
+import 'package:mon_potager/Screens/logInScreen.dart';
+import 'package:mon_potager/isLogin.dart';
 import 'package:mon_potager/models/Colours.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -6,11 +9,42 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: pageTitleColour,
-        title: Text('My Profile'),
+        title: Text(
+          'My Profile',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
+      bottomNavigationBar: BottomAppBar(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 60),
+            child: Column(
+              children: [IconButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ForumScreen(),));
+              }, icon: Icon(Icons.forum))],
+            ),
+          ),
+          Column(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
+                  },
+                  icon: Icon(Icons.person))
+            ],
+          )
+        ],
+      )),
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 270),
+        padding: const EdgeInsets.only(bottom: 270 - 50),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -43,16 +77,27 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('About'),
-                style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {},
+              //   child: Text('About'),
+              //   style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
+              // ),
               SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('Logout'),
-                style: ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
+                onPressed: () {
+                  toggleLogin();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => logInScreen(),
+                      ));
+                },
+                child: Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: pageTitleColour),
               ),
             ],
           ),

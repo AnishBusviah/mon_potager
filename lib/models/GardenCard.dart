@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Screens/AddNote.dart';
+import '../ui/add_task_bar.dart';
+import '../ui/reminder_screen.dart';
 
 class GardenCard extends StatefulWidget {
   GardenCard(
@@ -163,9 +165,13 @@ class _GardenCardState extends State<GardenCard> {
                         },
                         itemBuilder: (BuildContext context) =>
                             <PopupMenuEntry<SampleItem>>[
-                          const PopupMenuItem<SampleItem>(
+                           PopupMenuItem<SampleItem>(
                             // value: SampleItem.itemOne,
-                            child: Text('Add Reminder'),
+                            child: GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddTaskPage(description: widget.plantName),));
+                                },
+                                child: Text('Add Reminder')),
                           ),
                           PopupMenuItem<SampleItem>(
                             // value: SampleItem.itemTwo,

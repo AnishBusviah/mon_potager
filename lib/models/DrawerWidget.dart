@@ -6,6 +6,7 @@ import 'package:mon_potager/Screens/ForumScreen.dart';
 import 'package:mon_potager/models/Colours.dart';
 
 import '../Screens/logInScreen.dart';
+import '../isLogin.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -63,10 +64,27 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => logInScreen(),
+                                  builder: (context) => login? ForumScreen() : logInScreen(),
                                 ));
                           },
                       ),
+                      // ListTile(
+                      //     title: Text("Profile"),
+                      //     // trailing: Icon(Icons.forum),
+                      //     leading: Icon(Icons.person),
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //             builder: (context) => logInScreen(),
+                      //           ));
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //             builder: (context) => logInScreen(),
+                      //           ));
+                      //     },
+                      // ),
                       ListTile(
                         title: Text("Settings"),
                         leading: Icon(Icons.settings),

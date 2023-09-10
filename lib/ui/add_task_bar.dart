@@ -9,6 +9,7 @@ import 'package:mon_potager/ui/textstyle.dart';
 import 'package:mon_potager/ui/widgets/create_task.dart';
 import 'package:mon_potager/ui/widgets/input_field.dart';
 import 'package:mon_potager/widgets/TextToSpeech.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -18,8 +19,9 @@ import '../services/awesome_notification_service.dart';
 
 class AddTaskPage extends StatefulWidget {
   final TaskType? selectedTaskType;
+  String? description="";
 
-  const AddTaskPage({Key? key, this.selectedTaskType}) : super(key: key);
+  AddTaskPage({Key? key, this.selectedTaskType, this.description }  ) : super(key: key);
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -80,31 +82,51 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   bool _listening = false;
   Icon _micIcon = Icon(Icons.mic_none,color: Color.fromARGB(255, 173, 236, 180) );
+  SpeechToText speechToText = SpeechToText();
 
-void _toggleListening(){
+Future<void> _toggleListening() async {
   if(!_listening){
-    setState(() {
-      _listening = true;
-      speak("Listening...");
-      _micIcon = Icon(Icons.mic, color: solidGreen,);
-    });
+
+    var available = await speechToText.initialize();
+
+    if(available){
+      setState(() {
+        _listening = true;
+        speak("Listening...");
+        _micIcon = Icon(Icons.mic, color: solidGreen,);
+        speechToText.listen(
+          onResult: (result){
+            setState(() {
+              _noteController.text = result.recognizedWords;
+            });
+          }
+        );
+      });
+    }
   }else{
     setState(() {
       _listening = false;
       speak("Recording Stopped!");
       _micIcon = Icon(Icons.mic_none,color: Color.fromARGB(255, 173, 236, 180)
       );});
+    speechToText.stop();
   }
-
-
 }
+
+@override
+  void initState() {
+    if (widget.description != null){
+      _noteController.text = widget.description!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 595, left: 310),
+        padding: const EdgeInsets.only(top: 595+15, left: 310+20),
         child: AvatarGlow(
             endRadius: 25,
             animate: _listening,
